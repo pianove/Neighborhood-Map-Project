@@ -1,3 +1,81 @@
+//=======Model=============
+// to hard code 5 locations
+var initialLocations = [
+    {
+    street: 'Girardin',
+    city: 'Roanne',
+    },
+    
+    {
+    street: 'Girardin',
+    city: 'Chennai',
+    },
+
+    {
+    street: 'Girardin',
+    city: 'Budapest',
+    },
+    
+    {
+    street: 'Girardin',
+    city: 'Hong Kong',
+    },
+    
+    
+    {
+    street: 'Girardin',
+    city: 'New York',
+    }
+]
+
+// to construct locations from initialLocations array
+var Location = function(data) {
+    this.street = ko.observable(data.street);
+    this.city = ko.observable(data.city);
+    this.greeting = ko.computed(function(){
+        var greetingText = 'So, you want to live at '+ this.street() + ', ' + this.city() + '?';
+        return greetingText
+    },this);
+    this.adress =  ko.computed(function(){
+        var adress = this.street() + ', ' + this.city();
+        return adress
+    },this);
+    this.streetViewUrl = ko.computed(function(){
+        return ('http://maps.googleapis.com/maps/api/streetview?size=600x400&location=' + this.adress() + '')
+    },this);
+    
+    
+}
+
+//======ViewModel=======================
+// makes the locations show up in a list
+var ViewModel = function(){
+    var self = this;
+    this.initialLocationList = ko.observableArray([]);
+    initialLocations.forEach(function(locationItem){
+        self.initialLocationList.push(new Location(locationItem) );
+    });
+    
+    //set the first element of initialLocations as current location 
+    this.currentLocation = ko.observable(this.initialLocationList()[0]);
+    //set the currently selected location to the object passed in
+    this.setCurrentLocation = function(clickedLocation) {
+        self.currentLocation(clickedLocation);
+    };
+    // load streetview
+   console.log(this.currentLocation().streetViewUrl());    
+};
+
+
+
+ko.applyBindings(new ViewModel());
+//ko.applyBindings({
+//        street: ko.observable(""),        // Initially blank
+//        city: ko.observable("")  // Initially blank
+//});
+
+
+//======ViewModel
 
 function loadData() {
 
@@ -11,15 +89,15 @@ function loadData() {
     $wikiElem.text("");
     $nytElem.text("");
 
-    var streetStr = $('#street').val();
-    var cityStr = $('#city').val();
-    var address = streetStr + ', ' + cityStr;
-
-    $greeting.text('So, you want to live at ' + address + '?');
+//    var streetStr = $('#street').val();
+//    var cityStr = $('#city').val();
+//    var address = streetStr + ', ' + cityStr;
+//
+//    $greeting.text('So, you want to live at ' + address + '?');
 
     // load streetview
-    var streetviewUrl = 'http://maps.googleapis.com/maps/api/streetview?size=600x400&location=' + address + '';
-    $body.append('<img class="bgimg" src="' + streetviewUrl + '">');
+//    var streetviewUrl = 'http://maps.googleapis.com/maps/api/streetview?size=600x400&location=' + address + '';
+//    $body.append('<img class="bgimg" src="' + streetviewUrl + '">');
 
     // load nytimes
     // obviously, replace all the "X"s with your own API key
@@ -69,4 +147,4 @@ function loadData() {
     return false;
 };
 
-$('#form-container').submit(loadData);
+//$('#form-container').submit(loadData);

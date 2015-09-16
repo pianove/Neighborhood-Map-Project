@@ -6,16 +6,23 @@
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-
-    <form id="form-container" class="form-container">
-        <label for="street">Street: </label><input type="text" id="street" value="">
-        <label for="city">City: </label><input type="text" id="city" value="">
-        <button id="submit-btn">Submit</button>
-    </form>
-
+<!--
+    <p>Street: <input type="text" data-bind="textInput: street">
+        </span>City: <input type="text" data-bind="textInput: city">
+        <button id="submit-btn">Submit</button></p>
     <hr>
-
-    <h2 id="greeting" class="greeting">Where do you want to live?</h2>
+-->
+    <ul data-bind="foreach: initialLocationList">
+        <li data-bind="text: greeting, click: $parent.setCurrentLocation"></li>
+    </ul>
+    
+    <div data-bind="with:currentLocation">
+        <h2 data-bind="text: adress"></h2>
+         <img class = "bgimg" data-bind= "attr: {src: streetViewUrl}" src="" alt="Google Map">
+    </div>
+    
+    
+<!--    <h2 id="greeting" class="greeting">Where do you want to live?</h2>-->
 
 
 <!--
@@ -32,7 +39,14 @@
 -->
 
     <script src="js/libs/jquery.min.js"></script>
-    <script src="js/lib/knockout-3.3.0.js"></script>
+    <script src="js/libs/knockout-3.3.0.js"></script>
     <script src="js/script.js"></script>
+    <script>
+        function noMap(){
+            $('.bgimg').text("Failed to get Map data.");
+        }
+    </script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDNcrFAKgCqnz3xP8YR9JUaKEsAQaTd9Fs&callback=noMap"
+        async defer></script>
 </body>
 </html>
