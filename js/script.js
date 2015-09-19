@@ -266,7 +266,7 @@ var ViewModel = function(){
                 
                 //create infoWindow with location name and adress                
                 var infoWindow = new google.maps.InfoWindow({
-                    content: '<div class: "info-container"><div id="info-title">'+ '<b>' + location.name() + "</b></div>" + location.adress()  + "</div>" + '<p><b>' + "Category: " + location.category() + "</b></p>" +  '<p>' + location.description() + "</p></div>",
+                    content: '<div class: "info-container"><div id="info-title">'+ '<b>' + location.name() + "</b></div>" + location.adress()  + '<p><b>' + "Category: " + location.category() + "</b></p>" +  '<p>' + location.description() + "</p></div>",
                     maxWidth: 280
                     
                 });
