@@ -76,10 +76,10 @@ var ViewModel = function(){
         //Chennai generic latitude and longitude
         var chennai = {lat: 13.0827, lng: 80.2707};
         var mapOptions = {
-            zoom: 15,
+            zoom: 13,
             center: chennai,
             disableDefaultUI: true,
-//            mapTypeId: google.maps.MapTypeId.HYBRID,
+            mapTypeId: google.maps.MapTypeId.ROADMAP,
             mapTypeControl: true,
             mapTypeControlOptions: {
             style: google.maps.MapTypeControlStyle.HORIZONTAL_BAR,
@@ -124,13 +124,13 @@ var ViewModel = function(){
                 marker.addListener('click', animateMarker);
                 //bounce marker and open infoWindow when clicked and set currentlocation to clicked marker's location
                 function animateMarker() {
-                    self.setCurrentLocation(location);
                     if (marker.getAnimation() !== null) {
                         marker.setAnimation(null);
                         infoWindow.close(map, marker);
+                        self.clearWikipedia();
                     } else {
                         marker.setAnimation(google.maps.Animation.BOUNCE);
-                        self.loadWikipedia();
+                        self.setCurrentLocation(location);
                         infoWindow.open(map, marker);
                     }
                 };
@@ -143,16 +143,22 @@ var ViewModel = function(){
     };
     this.initMap();
     
-    this.loadWikipedia = function () {
+    this.clearWikipedia = function() {
+        // clear out old data before new request
+        var $wikiElem = $('#wikipedia-links');
+        
+        $('.wikipedia-container').css('display','none');
+        $wikiElem.text(""); 
+        
+    };
+    
+    this.loadWikipedia = function() {
 
 //        var $body = $('body');
         var $wikiElem = $('#wikipedia-links');
 //        var location = self.currentLocation().name() + ", " + self.currentLocation().city();
         var location = self.currentLocation().name()
-
-        // clear out old data before new request
-        $('.wikipedia-container').css('display','none');
-        $wikiElem.text("");        
+        self.clearWikipedia();
 
         // load wikipedia data
         var wikiUrl = 'http://en.wikipedia.org/w/api.php?action=opensearch&search=' + location + '&format=json&callback=wikiCallback';
