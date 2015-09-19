@@ -1,25 +1,24 @@
 //=======Model=============
-// to hard code locations -My To Do list during my visit to Chennai in November 2015 LOL
+// to hard code locations -Places to visit during my visit to Chennai in November 2015 as a FEND graduation present LOL
 
-var categories = ['Yoga', 'Accomodation', 'Must see', 'Shopping', 'Beaches', 'Nature', 'Restaurant', 'Art', 'Cooking'
-]
+var categories = ['Yoga', 'Accomodation', 'Must see', 'Shopping', 'Beaches', 'Nature', 'Restaurant', 'Art', 'Cooking'];
 var initialLocations = [
     {
     name: "Yoga Vahini",
     street: '21/4, Ramaniyam Smriti Apartments, 3rd Floor, Beach Road, Kalakshetra Colony, Besant Nagar',
     city: 'Chennai',
     category: 'Yoga',
-    description: "Centre for Specialised Yoga Training, Therapy & Research"        
+    description: "Centre for Specialised Yoga Training, Therapy & Research"
     },
-    
+
     {
     name: "Krishnamacharya Yoga Mandiram",
     street: '31, 4th Cross Street, Rama Krishna Nagar, Mandaveli',
     city: 'Chennai',
     category: 'Yoga',
-    description: "Since its inception, the KYM has always stood for quality teaching respecting the needs, interests, abilities and secular faiths of its students. The KYM has played a significant role in popularizing yoga as a holistic science that stems from a well founded theoretical basis, rather than as mere exercises for physical fitness. "  
+    description: "Since its inception, the KYM has always stood for quality teaching respecting the needs, interests, abilities and secular faiths of its students. The KYM has played a significant role in popularizing yoga as a holistic science that stems from a well founded theoretical basis, rather than as mere exercises for physical fitness."
     },
-    
+
     {
     name: "YWCA International Guest House",
     street: "1086 Poonamallee High Road",
@@ -35,7 +34,7 @@ var initialLocations = [
     category: 'Must see',
     description: "The Ashtalakshmi Kovil is a Hindu temple, which lies on the shorelines near the Elliot's beach."
     },
-    
+
     {
     name: 'Kapaleeshwar Temple',
     street: '12, North Mada Street',
@@ -43,7 +42,7 @@ var initialLocations = [
     category: 'Must see',
     description: 'This ancient shrine to Shiva is centrally located and among the area’s most popular landmarks.'
     },
-    
+
     {
     name: 'Sai Baba Temple',
     street: 'Injambakkam',
@@ -59,7 +58,7 @@ var initialLocations = [
     category: 'Must see',
     description: 'This temple has a huge statue of Hanuman. Powerful god. The temple is inside nanganallur and the temple is a must see one. Saturdays is crowded compared with other days.'
     },
-    
+
     {
     name: 'FabIndia',
     street: '3 Woods Road',
@@ -67,7 +66,7 @@ var initialLocations = [
     category: 'Shopping',
     description: 'This is the place to go for all your natural-dyed, hand loomed and hand made textiles.'
     },
-    
+
     {
     name: 'Sri Parthasarathy Temple',
     street: 'Singarachari Street, Triplicane',
@@ -75,7 +74,7 @@ var initialLocations = [
     category: 'Must see',
     description: 'Close to Marina Beach, yet another architectural wonder from the 8th century can be part of the itinerary. An intricate pyramid-shaped rajagopuram (dome) stands prominently and is the main feature of the temple. As anecdotes go, the British were unable to pronounce the original name, Thiriallikeni, and rechristened it Triplicane.'
     },
-    
+
     {
     name: 'San Thome Church',
     street: ' 38, San Thome High Road',
@@ -83,33 +82,33 @@ var initialLocations = [
     category: 'Must see',
     description: "Probably the most magnificent and prominent reminder of Chennai's colonial lineage, the San Thome Church bears a colossal amount of history since A.D. 52, the year when St. Thomas traveled to India, though the Roman Catholic basilica was built in the 16th century by the Portuguese. It was then rebuilt by the British in 1893. The imposing structure reaches a height of 155 feet and emanates peace and architectural splendor with its tall spires over the tomb of the saint. The sea makes a wonderful backdrop to the pristine white structure. The San Thome Church is considered one of the pilgrimages for people around the world."
     },
-    
+
     {
-    name: 'Karl Schmidt Memorial',   
+    name: 'Karl Schmidt Memorial',
     street: 'Elliots Beach, Besant Nagar',
     city: 'Chennai',
     category: 'Must see',
     description: "The Karl Schmidt Memorial is an architectural landmark commemorating a Danish sailor who drowned in 1930 trying to save the life of a girl."
     },
-    
+
      {
-    name: 'Marina Beach',   
+    name: 'Marina Beach',
     street: 'Marina Beach',
     city: 'Chennai',
     category: 'Beaches',
     description: "This expansive beach is Chennai's most famous tourist attraction, though the undercurrent is too strong for all but the strongest swimmers."
     },
-    
+
      {
-    name: 'Breezy Beach',   
+    name: 'Breezy Beach',
     street: 'Valmiki Nagar',
     city: 'Chennai',
     category: 'Beaches',
     description: "this is the only beach which is best secured and peaceful as well in the whole lot of chennai beaches '('except on holidays and week ends which is heavily crowded')'. Secured because police patrolling is available."
     },
-    
+
     {
-    name: 'Chennai Turtle Walk',   
+    name: 'Chennai Turtle Walk',
     street: '8/25, 2nd Street, DP Nagar, Kotturpuram',
     city: 'Chennai',
     category: 'Nature',
@@ -123,55 +122,54 @@ var initialLocations = [
     category: 'Restaurant',
     description: "A really good Kerala restaurant in the area. Syrian Beef Fry is a must try item, it totally steals the show. I mostly go there for lunches, which are good - fish curry meals. You get most Kerala varieties like appam, idiyappam, etc."
     },
-    
+
     {
-    name: 'Kalakshetra Dance School',   
+    name: 'Kalakshetra Dance School',
     street: 'Thiruvanmiyur',
     city: 'Chennai',
     category: 'Art',
     description: "Kalakshetra has been around since 1936. Many subtle nuances existed in the making of this institution — a symbol of uprising against the British, commitment to theosophy and creation of a strong identity for Indian classical dance forms."
     },
-    
+
     {
-    name: 'Pondy Bazaar',   
+    name: 'Pondy Bazaar',
     street: 'Thyagaraya Road',
     city: 'Chennai',
     category: 'Shopping',
     description: "Pondy bazaar is a pretty old shopping area on T Road in Chennai. Hosting a variety of stores, most of the branded shops have their outlets here."
     },
-    
+
     {
-    name: 'M.Rm.Rm. Cultural Foundation',   
+    name: 'M.Rm.Rm. Cultural Foundation',
     street: 'Thyagaraya Road',
     city: 'Chennai',
     category: 'Art',
     description: "The MRM Foundation is a nonprofit organization that documents and supports revival of rural crafts, textiles and architecture. Keep walking on MRC Nagar Main Rd after passing the SUN TV then turn left. You will find your paradise on your left!"
     },
-    
+
     {
-    name: 'Kitchen e Lazeez',   
+    name: 'Kitchen e Lazeez',
     street: '68/1, Q Block,Ground Floor, 15th Street | Annanagar East',
     city: 'Chennai',
     category: 'Cooking',
     description: "If u want to learn cooking it's one of the best places to visit. Do check their Facebook page (facebook.com/kitchenelazeez) events section and plan accordingly. Classes on Saturdays and Mondays only."
     },
-    
+
     {
-    name: 'Mudumalai National Park',   
+    name: 'Mudumalai National Park',
     street: '',
     city: 'Theppakadu',
     category: 'Nature',
     description: "The protected area is home to several endangered and vulnerable species including Indian elephant, Bengal tiger, gaur and Indian leopard. There are at least 266 species of birds in the sanctuary, including critically endangered Indian white-rumped vulture and long-billed vulture. Elephant Safari and Van Safari, conducted by the Tamil Nadu Forest Department, depart from park headquarters at Theppakadu"
     },
-    
+
     {
-    name: 'Mamallapuram',   
+    name: 'Mamallapuram',
     street: 'Varaha Cave',
     city: 'Mamallapuram',
     category: 'Nature',
     description: "A tourist town 60 km south of Chennai famous for its stone carvings.You can also catch the bus from Pondicherry. Learn how to surf with MUMU SURF SCHOOL in Mahabalipuram. If you are looking for an adventure in the Bay of Bengal, go and see Mukesh alias Mumu '('qualified Surfinstructor, Emergency Responder and Rescue Scuba Diver')'"
-    },
-    
+    }
 ]
 
 // to construct locations from initialLocations array
@@ -208,17 +206,36 @@ var ViewModel = function(){
     categories.sort().forEach(function(catName){
         self.categoryList.push(catName)
     });
-    
-    //set the first element of initialLocations as current location 
+
+    //set the first element of initialLocations as current location
     this.currentLocation = ko.observable(this.initialLocationList()[0]);
     //set the currently selected location to the object passed in
     this.setCurrentLocation = function(clickedLocation) {
         self.currentLocation(clickedLocation);
         self.loadWikipedia();
     };
+
+    this.selectedLocations = ko.observableArray([]);
+    this.displayMessage = ko.observable("false");
+    this.searchName = ko.observable("");
+    this.searchLocByName = function(){
+        //clear selectedLocations
+        self.selectedLocations.removeAll();
+        //clear markers from map
+        self.clearMarker();
+        self.initialLocationList().forEach(function(locItem){
+            var n = locItem.name().search(new RegExp(self.searchName(), "i"));
+            if ( n != -1) {
+                self.selectedLocations.push(locItem);
+                self.addMarker(self.selectedLocations);
+            }
+        });
+    };
+
     // load streetview
-//   console.log(this.currentLocation().adress());
     //load google map
+    var map;
+    var geocoder = new google.maps.Geocoder();
     this.initMap = function() {
         //Chennai generic latitude and longitude
         var chennai = {lat: 13.0827, lng: 80.2707};
@@ -244,24 +261,38 @@ var ViewModel = function(){
         };
         map = new google.maps.Map(document.getElementById("map"),
         mapOptions);
-        // convert hard coded location adresses into geographical coordinates and add markers to map
+    };
+    this.initMap();
+    // convert hard coded location adresses into geographical coordinates and add markers to map
         // Resource: https://developers.google.com/maps/documentation/javascript/examples/geocoding-simple
-        var geocoder = new google.maps.Geocoder();
-        self.initialLocationList().forEach(function(locationItem){
+    this.addMarker = function (selectedLocations) {
+        selectedLocations().forEach(function(locationItem){
             geocodeAddress(locationItem, geocoder, map);
         });
     };
+    //removes markers and clear markersArray
+    //resource: http://stackoverflow.com/questions/1544739/google-maps-api-v3-how-to-remove-all-markers
+    this.clearMarker = function() {
+        while(markersArray.length) { 
+            markersArray.pop().setMap(null);
+        }
+    };
+    
+    //cache markers for quick hide and show 
+    var markersArray = [];
     // function converts adress to geographical coordinates via geocoder services and add a marker and infoWindow to resultsMap
     //Resource: https://developers.google.com/maps/documentation/javascript/examples/geocoding-simple
     function geocodeAddress(location, geocoder, resultsMap) {        
         geocoder.geocode({'address': location.adress()}, function(results, status) {
             if (status === google.maps.GeocoderStatus.OK) {
                 resultsMap.setCenter(results[0].geometry.location);
+                
                 // add markers to map with bounce animation   
                 var marker = new google.maps.Marker({
                 map: resultsMap,
                 animation: google.maps.Animation.DROP,
-                position: results[0].geometry.location
+                position: results[0].geometry.location,
+                title: location.name()
                 });
                 
                 //create infoWindow with location name and adress 
@@ -271,6 +302,8 @@ var ViewModel = function(){
                     maxWidth: 280
                     
                 });
+                //cache markers for quick hide and show 
+                markersArray.push(marker);
                 marker.addListener('click', animateMarker);
                 //bounce marker and open infoWindow when clicked and set currentlocation to clicked marker's location
                 function animateMarker() {
@@ -280,7 +313,7 @@ var ViewModel = function(){
                         self.clearWikipedia();
                     } else {
                         marker.setAnimation(google.maps.Animation.BOUNCE);
-                        self.setCurrentLocation(location);
+//                        self.setCurrentLocation(location);
                         infoWindow.open(map, marker);
                     }
                 };
@@ -291,7 +324,7 @@ var ViewModel = function(){
         });
         
     };
-    this.initMap();
+        
     
     this.clearWikipedia = function() {
         // clear out old data before new request
@@ -304,10 +337,8 @@ var ViewModel = function(){
     
     this.loadWikipedia = function() {
 
-//        var $body = $('body');
         var $wikiElem = $('#wikipedia-links');
-//        var location = self.currentLocation().name() + ", " + self.currentLocation().city();
-        var location = self.currentLocation().name()
+        var location = self.currentLocation().name();
         self.clearWikipedia();
 
         // load wikipedia data
@@ -340,84 +371,17 @@ var ViewModel = function(){
     };
     
     this.filterLocationsByCategory = function(cat) {
-        
-    }
-
-    
+         //clear selectedLocations
+        self.selectedLocations.removeAll();
+        //clear markers from map
+        self.clearMarker();
+        self.initialLocationList().forEach(function(locItem){
+            if ( locItem.category() === cat) {
+                self.selectedLocations.push(locItem);
+                self.addMarker(self.selectedLocations);
+            }
+        });
+    };
 };
 
 ko.applyBindings(new ViewModel());
-
-
-
-function loadData() {
-
-    var $body = $('body');
-    var $wikiElem = $('#wikipedia-links');
-    var $nytHeaderElem = $('#nytimes-header');
-    var $nytElem = $('#nytimes-articles');
-    var $greeting = $('#greeting');
-
-    // clear out old data before new request
-    $wikiElem.text("");
-    $nytElem.text("");
-
-//    var streetStr = $('#street').val();
-//    var cityStr = $('#city').val();
-//    var address = streetStr + ', ' + cityStr;
-//
-//    $greeting.text('So, you want to live at ' + address + '?');
-
-    // load streetview
-//    var streetviewUrl = 'http://maps.googleapis.com/maps/api/streetview?size=600x400&location=' + address + '';
-//    $body.append('<img class="bgimg" src="' + streetviewUrl + '">');
-
-    // load nytimes
-    // obviously, replace all the "X"s with your own API key
-    var nytimesUrl = 'http://api.nytimes.com/svc/search/v2/articlesearch.json?q=' + cityStr + '&sort=newest&api-key=ad070610b55dfb1bbf37db5b3c317c38:9:72310292';
-    $.getJSON(nytimesUrl, function(data){
-
-        $nytHeaderElem.text('New York Times Articles About ' + cityStr);
-
-        articles = data.response.docs;
-        for (var i = 0; i < articles.length; i++) {
-            var article = articles[i];
-            $nytElem.append('<li class="article">'+
-                '<a href="'+article.web_url+'">'+article.headline.main+'</a>'+
-                '<p>' + article.snippet + '</p>'+
-            '</li>');
-        };
-
-    }).error(function(e){
-        $nytHeaderElem.text('New York Times Articles Could Not Be Loaded');
-    });
-
-
-
-    // load wikipedia data
-    var wikiUrl = 'http://en.wikipedia.org/w/api.php?action=opensearch&search=' + cityStr + '&format=json&callback=wikiCallback';
-    var wikiRequestTimeout = setTimeout(function(){
-        $wikiElem.text("failed to get wikipedia resources");
-    }, 8000);
-
-    $.ajax({
-        url: wikiUrl,
-        dataType: "jsonp",
-        jsonp: "callback",
-        success: function( response ) {
-            var articleList = response[1];
-
-            for (var i = 0; i < articleList.length; i++) {
-                articleStr = articleList[i];
-                var url = 'http://en.wikipedia.org/wiki/' + articleStr;
-                $wikiElem.append('<li><a href="' + url + '">' + articleStr + '</a></li>');
-            };
-
-            clearTimeout(wikiRequestTimeout);
-        }
-    });
-
-    return false;
-};
-
-//$('#form-container').submit(loadData);
