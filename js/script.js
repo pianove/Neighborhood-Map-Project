@@ -264,9 +264,10 @@ var ViewModel = function(){
                 position: results[0].geometry.location
                 });
                 
-                //create infoWindow with location name and adress                
+                //create infoWindow with location name and adress 
+                var contentString = '<div class: "info-container"><div id="info-title">'+ '<b>' + location.name() + "</b></div>" + location.adress()  + '<p><b>' + "Category: " + location.category() + "</b></p>" +  '<p>' + location.description() + "</p></div>";
                 var infoWindow = new google.maps.InfoWindow({
-                    content: '<div class: "info-container"><div id="info-title">'+ '<b>' + location.name() + "</b></div>" + location.adress()  + '<p><b>' + "Category: " + location.category() + "</b></p>" +  '<p>' + location.description() + "</p></div>",
+                    content: contentString,
                     maxWidth: 280
                     
                 });
