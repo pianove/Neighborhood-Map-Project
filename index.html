@@ -65,7 +65,7 @@
     <div class="row">
         <div class="col-xs-12 col-sm-6 col-lg-6">Categories:
         <ul  style="list-style: none;" data-bind="foreach: categoryList">
-            <li data-bind="text: $data"></li></ul>
+            <li data-bind="text: $data, click: $parent.filterLocationsByCategory"></li></ul>
         
             
 <!--
@@ -75,13 +75,19 @@
 -->
         </div>
         <div class="col-xs-6 col-lg-6">
-            <input type="text" placeholder="type here for search and filter">
-<!--             <input type="text" label="search for location" data-bind="textInput: adress">-->
-            <button id="submit-btn">Search</button>
-            <div data-bind="with:currentLocation">
-        <h3>Adress: &nbsp;<span><h4 data-bind="text: adress"></h4></span></h3>
+            <form class="search" data-bind="submit:searchLocByName">
+                <input type="text" placeholder="type here for search or filter below" data-bind="textInput: searchName">
+                <button id="submit-btn">Search</button>
+            </form>
+            <div  class="search-result"> <h3>Selected locations:</h3>
+                <ul data-bind="foreach: selectedLocations">
+                    <li data-bind="text: name, click:$parent.setCurrentLocation"></li>
+                </ul>
+            </div> 
 
-        </div>
+<!--<!--            <div  class="search-result" data-bind="with:currentLocation">-->
+<!--        <h4>Selected locations: &nbsp;<span><h4 data-bind="text: name"></h4></span></h3>-->
+<!--            </div>-->
     </div>
     <!--         <img class = "bgimg" data-bind= "attr: {src: streetViewUrl}" src="" alt="Google Map">-->
     </div>
