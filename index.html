@@ -35,6 +35,23 @@
         background-color: cornflowerblue;      
             
       }
+/*
+      .info-content {
+        font-size: 12px;   
+      }
+*/
+
+      .info-title {
+        font-size: 16px;
+        text-transform: capitalize;
+        line-height: 20px;
+      }
+
+      .info-container {
+        overflow: auto;
+        float: center;
+      }
+    
       .wikipedia-container {
         float:right;
         width:290px;
@@ -47,10 +64,16 @@
 </head>
 <body>
     <div class="row">
-        <div class="col-xs-12 col-sm-6 col-lg-6">
+        <div class="col-xs-12 col-sm-6 col-lg-6">Categories:
+        <ul  style="list-style: none;" data-bind="foreach: categoryList">
+            <li data-bind="text: $data"></li></ul>
+        
+            
+<!--
             <ul data-bind="foreach: initialLocationList">
                 <li data-bind="text: name, click: $parent.setCurrentLocation"></li>
             </ul>
+-->
         </div>
         <div class="col-xs-6 col-lg-6">
             <input type="text" placeholder="type here for search and filter">
