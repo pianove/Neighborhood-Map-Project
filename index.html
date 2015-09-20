@@ -10,8 +10,6 @@
 
     <!-- Optional theme -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css">
-
-<!--    <link rel="stylesheet" href="css/style.css">-->
      <script async src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
     <!-- Latest compiled and minified JavaScript -->
     <script async src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>   
@@ -28,28 +26,12 @@
         list-style: none;
       }
         
-/*
-      ul.search-category {
-        display: flex;
-        max-width: 250px;
-        flex-flow: row wrap;
-        align-content: space-between;
-        justify-content: space-between;
-      }
-*/
-/*
-        
-      li.search-category {    
-        display: flex;
-        padding-right: 10px;
-      }
-*/
-        
       li.search-result {
         margin-top: 6px;
         list-style: none;
         font-size: 18px;
         margin-left: 5px;
+        overflow:auto;
       }
         
       ul.sb_dropdown{
@@ -63,6 +45,7 @@
         border-bottom-right-radius:10px;
         border-bottom-left-radius:10px;
         display: block;
+        margin: 0px 0px 5px 0px;
       }
       ul.sb_dropdown li{
         font-size:16px;
@@ -70,8 +53,7 @@
         height:32px;
         float:left;
         width:60%;
-        padding: 0;
-        margin:0;
+        padding: 0px;
       }
       ul.sb_dropdown li input[type="checkbox"]{
         float:left;
@@ -104,8 +86,6 @@
         background: #fafafa; 
         background: -webkit-gradient(linear, left top, left bottom, from(#f2f2f2), to(#fafafa)); 
         background: -moz-linear-gradient(top, #f2f2f2, #fafafa);
-/*        font-size:24px;*/
-/*        font-family:"Myriad Pro", "Trebuchet MS", sans-serif;*/
         -moz-box-shadow:1px 1px 3px #555;
         -webkit-box-shadow:1px 1px 3px #555;
         -box-shadow:1px 1px 3px #555;
@@ -114,14 +94,8 @@
         text-shadow:1px 1px 1px #fff;
         width:295px;
         float:left;
-        margin:3px 0px;
       }
-/*
-      label {
-        padding-left: 5px;      
-      }
-*/
-      
+  
       .map {
         height: 100%;
         position: fixed !important;
@@ -136,7 +110,8 @@
         background-color: rgba(255,255,255,0.7);
         position: absolute;
         padding-top: 10px;
-/*        max-width: 600px;*/
+        overflow: auto;
+        max-height: 400px;
       }
 
       .info-title {
@@ -161,7 +136,6 @@
         float:left;
         width:280px;
         padding:10px;
-/*        margin-right: 10px;*/
         background-color: rgba(255,255,255,0.7);
         display: none;
       }
@@ -170,21 +144,14 @@
 <body>
     <div class="search-container">
         <div class="col-xs-12 col-sm-6 col-lg-6">
-            <form class="search" data-bind="submit:searchLocByName">
-                <input style="width: 185px" type="text" placeholder="Type here for search" data-bind="textInput: searchName">
+            <form id="ui_element" class="search" data-bind="submit:searchLocByName">
+                <input class="sb_input" style="width: 185px" type="text" placeholder="Type here for search" data-bind="textInput: searchName">
                 <button id="submit-btn">Search</button>
-                <li  class="search-category sb_filter">Filter your search</li>
-                <ul class="search-category sb_dropdown" data-bind="foreach: categoryList" >
+                <li  id="filter" class="search-category sb_filter">Click here to filter</li>
+                <ul class="sb_dropdown" style='display:none;' data-bind="foreach: categoryList" >
                     <li data-bind="text: $data, click: $parent.filterLocationsByCategory"></li>
                 </ul>
             </form>
-<!--
-            <h4>Select a category to filter:</h4>
-                <ul class="search-category" data-bind="foreach: categoryList">
-                    <li class="search-category" data-bind="text: $data, click: $parent.filterLocationsByCategory">
-                    </li>
-                </ul>
--->
         </div>
         <div  class="search-result col-xs-12 col-sm-6 col-lg-6"> <h4 class="sb_filter">Selected locations:</h4>
             <ul data-bind="foreach: selectedLocations">
@@ -197,11 +164,39 @@
     <div class="wikipedia-container">
         <h4 id="wikipedia-header">Relevant Wikipedia Links</h4>
         <ul id="wikipedia-links"></ul>
-    </div>   
-    
+    </div>
+<!--        Credit to http://tympanus.net/codrops/2010/07/14/ui-elements-search-box/ for snippet-->
+    <script type="text/javascript">
+            $(function() {
+				/**
+				* the element
+				*/
+				var $ui = $('#ui_element');
+				
+				/**
+				* on focus and on click display the dropdown,
+				*/
+				$ui.find('#filter').bind('focus click',function(){
+					$ui.andSelf()
+					   .find('.sb_dropdown')
+					   .show();
+				});
+				
+				/**
+				* on mouse leave hide the dropdown,
+				*/
+				$ui.bind('mouseleave',function(){
+					$ui.andSelf()
+					   .find('.sb_dropdown')
+					   .css("display","none");
+				});
+            });
+        </script>
+
+        
     <script>            
-        function noMap(){
-            document.getElementById("map").style.display="none";
+        function noMap(){           
+ document.getElementById("map").style.display="none";
             var img = document.createElement("img");
             img.src = '/img/chennai_men.jpg';
             img.alt = 'chennai';
