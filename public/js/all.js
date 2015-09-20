@@ -76,7 +76,7 @@ var initialLocations = [
     },
 
     {
-    name: 'San Thomas Church',
+    name: 'San Thome Church',
     street: ' 38, San Thome High Road',
     city: 'Chennai',
     category: 'Must see',
@@ -177,6 +177,10 @@ var Location = function(data) {
     this.name = ko.observable(data.name);
     this.street = ko.observable(data.street);
     this.city = ko.observable(data.city);
+////    this.greeting = ko.computed(function(){
+////        var greetingText = 'So, you want to live at '+ this.street() + ', ' + this.city() + '?';
+//        return greetingText
+//    },this);
     this.adress =  ko.computed(function(){
         var adress = this.street() + ', ' + this.city();
         return adress;
@@ -186,7 +190,6 @@ var Location = function(data) {
 //    this.streetViewUrl = ko.computed(function(){
 //        return ('http://maps.googleapis.com/maps/api/streetview?size=600x400&location=' + this.adress() + '')
 //    },this);
-    
 };
 
 
@@ -200,7 +203,6 @@ var ViewModel = function(){
     initialLocations.forEach(function(locationItem){
         self.initialLocationList.push(new Location(locationItem) );
     });
-    
     this.categoryList = ko.observableArray([]);
     categories.sort().forEach(function(catName){
         self.categoryList.push(catName);
@@ -284,9 +286,9 @@ var ViewModel = function(){
     function geocodeAddress(location, geocoder, resultsMap) {
         var marker,
             contentString,
-            infoWindow,
+            infoWindow;
         //bounce marker and open infoWindow when clicked
-        animateMarker = function() {
+        function animateMarker() {
             if (marker.getAnimation() !== null) {
                 marker.setAnimation(null);
                 infoWindow.close(resultsMap, marker);
@@ -295,12 +297,11 @@ var ViewModel = function(){
                 marker.setAnimation(google.maps.Animation.BOUNCE);
                 infoWindow.open(resultsMap, marker);
             }
-        };
+        }
 
         geocoder.geocode({'address': location.adress()}, function(results, status) {
             if (status === google.maps.GeocoderStatus.OK) {
-                var latLng = results[0].geometry.location;
-                resultsMap.setCenter(latLng);                
+                resultsMap.setCenter(results[0].geometry.location);
                 
                 // add markers to map with bounce animation   
                 marker = new google.maps.Marker({
@@ -319,7 +320,8 @@ var ViewModel = function(){
                 });
                 //cache markers for quick hide and show 
                 markersArray.push(marker);
-                marker.addListener('click', animateMarker);
+                marker.addListener('click', animateMarker());
+                
             } else {
               alert('Geocode was not successful for the following reason: ' + status);
               }

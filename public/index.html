@@ -64,10 +64,8 @@
 <body>
     <div class="row">
         <div class="col-xs-12 col-sm-6 col-lg-6">Categories:
-            <ul  style="list-style: none;" data-bind="foreach: categoryList">
-                <li data-bind="text: $data, click: $parent.filterLocationsByCategory">
-                </li>
-            </ul>
+        <ul  style="list-style: none;" data-bind="foreach: categoryList">
+            <li data-bind="text: $data, click: $parent.filterLocationsByCategory"></li></ul>
         </div>
         <div class="col-xs-6 col-lg-6">
             <form class="search" data-bind="submit:searchLocByName">
@@ -78,15 +76,18 @@
                 <ul data-bind="foreach: selectedLocations">
                     <li data-bind="text: name, click:$parent.setCurrentLocation"></li>
                 </ul>
-            </div> 
+            </div>
+        </div>
+    </div>
     <div id="map" class="map"  alt="Google Map"></div>
     <div id="no-map" alt="In lieu of Google Maps"></div>
     <div class="wikipedia-container">
         <h3 id="wikipedia-header">Relevant Wikipedia Links</h3>
         <ul id="wikipedia-links"></ul>
-    </div>   
+    </div>
     
-    <script>            
+    <script>
+            
         function noMap(){
             document.getElementById("map").style.display="none";
             var img = document.createElement("img");
@@ -101,6 +102,6 @@
 
     </script>
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDNcrFAKgCqnz3xP8YR9JUaKEsAQaTd9Fs" type="text/javascript"></script>
-    <script src="public/js/all.min.js"></script>
+    <script src="js/all.js"></script>
 </body>
 </html>
