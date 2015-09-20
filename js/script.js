@@ -377,6 +377,8 @@ var ViewModel = function(){
         self.selectedLocations.removeAll();
         //clear markers from map
         self.clearMarker();
+        //clear Wikipedia
+        self.clearWikipedia();
         self.initialLocationList().forEach(function(locItem){
             if ( locItem.category() === cat) {
                 self.selectedLocations.push(locItem);
