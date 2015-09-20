@@ -222,6 +222,8 @@ var ViewModel = function(){
         self.selectedLocations.removeAll();
         //clear markers from map
         self.clearMarker();
+        //clear Wikipedia
+        self.clearWikipedia();
         self.initialLocationList().forEach(function(locItem){
             var n = locItem.name().search(new RegExp(self.searchName(), "i"));
             if ( n != -1) {
