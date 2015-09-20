@@ -167,7 +167,7 @@
     </div>
 <!--        Credit to http://tympanus.net/codrops/2010/07/14/ui-elements-search-box/ for snippet-->
     <script type="text/javascript">
-            $(function() {
+            $(document).ready(function() {
 				/**
 				* the element
 				*/
@@ -194,19 +194,16 @@
         </script>
 
         
-    <script>            
-        function noMap(){           
- document.getElementById("map").style.display="none";
-            var img = document.createElement("img");
+    <script type="text/javascript">
+        window.onload = function () {
+          var foundGoogle, img;
+          foundGoogle = typeof google === 'object' && typeof google.maps === 'object';
+          if (!foundGoogle) {
+            img = new Image();
             img.src = '/img/chennai_men.jpg';
-            img.alt = 'chennai';
-            img.id = 'no-maps-api';
-            var title = document.createElement("h2");
-            title.innerHTML = "Google Maps Api can't be loaded. Please try again";
-            document.getElementById("no-map").appendChild(img);
-            document.getElementById("no-map").appendChild(title);
-        }
-
+            $('#map').appendChild(img);
+          }
+        };
     </script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/knockout/3.3.0/knockout-min.js"></script>
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDNcrFAKgCqnz3xP8YR9JUaKEsAQaTd9Fs"  type="text/javascript"></script>
