@@ -232,38 +232,7 @@ var ViewModel = function(){
             }
         });
     };
-
-    // load streetview
-    //load google map
-    var map;
-    var geocoder = new google.maps.Geocoder();
-    this.initMap = function() {
-        //Chennai generic latitude and longitude
-        var chennai = {lat: 13.0827, lng: 80.2707};
-        var mapOptions = {
-            zoom: 13,
-            center: chennai,
-            disableDefaultUI: true,
-            mapTypeId: google.maps.MapTypeId.ROADMAP,
-            mapTypeControl: true,
-            mapTypeControlOptions: {
-            style: google.maps.MapTypeControlStyle.HORIZONTAL_BAR,
-            position: google.maps.ControlPosition.LEFT_CENTER
-            },
-            zoomControl: true,
-            zoomControlOptions: {
-            position: google.maps.ControlPosition.RIGHT_BOTTOM
-            },
-            scaleControl: true,
-            streetViewControl: true,
-            streetViewControlOptions: {
-            position: google.maps.ControlPosition.RIGHT_BOTTOM
-            }
-        };
-        map = new google.maps.Map(document.getElementById("map"),
-        mapOptions);
-    };
-    this.initMap();
+    
     // convert hard coded location adresses into geographical coordinates and add markers to map
         // Resource: https://developers.google.com/maps/documentation/javascript/examples/geocoding-simple
     this.addMarker = function (selectedLocations) {
@@ -390,4 +359,37 @@ var ViewModel = function(){
     };
 };
 
+//load google map
+var map,
+    geocoder;
+function initMap() {
+    //Chennai generic latitude and longitude
+    var chennai = {lat: 13.0827, lng: 80.2707};
+    var mapOptions = {
+        zoom: 13,
+        center: chennai,
+        disableDefaultUI: true,
+        mapTypeId: google.maps.MapTypeId.ROADMAP,
+        mapTypeControl: true,
+        mapTypeControlOptions: {
+        style: google.maps.MapTypeControlStyle.HORIZONTAL_BAR,
+        position: google.maps.ControlPosition.LEFT_CENTER
+        },
+        zoomControl: true,
+        zoomControlOptions: {
+        position: google.maps.ControlPosition.RIGHT_BOTTOM
+        },
+        scaleControl: true,
+        streetViewControl: true,
+        streetViewControlOptions: {
+        position: google.maps.ControlPosition.RIGHT_BOTTOM
+        }
+    };
+    map = new google.maps.Map(document.getElementById("map"),
+    mapOptions);
+    geocoder = new google.maps.Geocoder();
+}
+
+
+//make it run
 ko.applyBindings(new ViewModel());
