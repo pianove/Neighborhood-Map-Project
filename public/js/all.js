@@ -1,3 +1,39 @@
+//global variables to reach out in ViewModel once initMap() executed
+var map,
+    geocoder;
+
+//load google map
+function initMap() {
+    "use strict";
+    //Chennai generic latitude and longitude
+    var chennai = {lat: 13.1537, lng: 80.2707},
+    mapOptions = {
+        zoom: 11,
+        center: chennai,
+        disableDefaultUI: true,
+        mapTypeId: google.maps.MapTypeId.ROADMAP,
+        mapTypeControl: true,
+        mapTypeControlOptions: {
+        style: google.maps.MapTypeControlStyle.HORIZONTAL_BAR,
+        position: google.maps.ControlPosition.LEFT_CENTER
+        },
+        zoomControl: true,
+        zoomControlOptions: {
+        position: google.maps.ControlPosition.RIGHT_BOTTOM
+        },
+        scaleControl: true,
+        streetViewControl: true,
+        streetViewControlOptions: {
+        position: google.maps.ControlPosition.RIGHT_BOTTOM
+        }
+    };
+    map = new google.maps.Map(document.getElementById("map"),
+    mapOptions);
+    geocoder = new google.maps.Geocoder();
+    
+}
+
+
 //=======Model=============
 // to hard code locations -Places to visit during my visit to Chennai in November 2015 as a FEND graduation present LOL
 
@@ -174,6 +210,7 @@ var initialLocations = [
 
 // to construct locations from initialLocations array
 var Location = function(data) {
+    var self = this;
     this.name = ko.observable(data.name);
     this.street = ko.observable(data.street);
     this.city = ko.observable(data.city);
@@ -183,10 +220,14 @@ var Location = function(data) {
     },this);
     this.category = ko.observable(data.category);
     this.description = ko.observable(data.description);
-//    this.streetViewUrl = ko.computed(function(){
-//        return ('http://maps.googleapis.com/maps/api/streetview?size=600x400&location=' + this.adress() + '')
-//    },this);
     
+    // for the next release to cache geocoordinates and enable streetview 
+  /*  this.latLng = ko.observable(data.latLng);
+    this.streetViewUrl = ko.computed(function(){
+        return ('http://maps.googleapis.com/maps/api/streetview?size=600x400&location=' + this.adress() + '')
+    },this);
+*/    
+   
 };
 
 
@@ -194,7 +235,7 @@ var Location = function(data) {
 //======ViewModel=======================
 // makes the locations show up in a list
 var ViewModel = function(){
-    "use-strict";
+    "use strict";
     var self = this;
     this.initialLocationList = ko.observableArray([]);
     initialLocations.forEach(function(locationItem){
@@ -228,15 +269,22 @@ var ViewModel = function(){
             var n = locItem.name().search(new RegExp(self.searchName(), "i"));
             if ( n != -1) {
                 self.selectedLocations.push(locItem);
-                self.addMarker(self.selectedLocations);
             }
         });
-    };
+        self.addMarker(self.selectedLocations);
+    };    
     
+    
+    //cache markers for quick hide and show 
+    var markersArray = [],
+        geocodeTimeOutId;
+
     // convert hard coded location adresses into geographical coordinates and add markers to map
         // Resource: https://developers.google.com/maps/documentation/javascript/examples/geocoding-simple
+   this.addMarker = function(){};
     this.addMarker = function (selectedLocations) {
         selectedLocations().forEach(function(locationItem){
+            
             geocodeAddress(locationItem, geocoder, map);
         });
     };
@@ -247,10 +295,8 @@ var ViewModel = function(){
             markersArray.pop().setMap(null);
         }
     };
-    
-    //cache markers for quick hide and show 
-    var markersArray = [];
-    // function converts adress to geographical coordinates via geocoder services and add a marker and infoWindow to resultsMap
+   var i = 0;
+        // function converts adress to geographical coordinates via geocoder services and add a marker and infoWindow to resultsMap
     //Resource: https://developers.google.com/maps/documentation/javascript/examples/geocoding-simple
     function geocodeAddress(location, geocoder, resultsMap) {
         var marker,
@@ -267,11 +313,15 @@ var ViewModel = function(){
                 infoWindow.open(resultsMap, marker);
             }
         };
-
         geocoder.geocode({'address': location.adress()}, function(results, status) {
             if (status === google.maps.GeocoderStatus.OK) {
+                i++;
                 var latLng = results[0].geometry.location;
-                resultsMap.setCenter(latLng);                
+                console.log("ok" + i + location.name());
+//                 location.latLng({'lat': latLng.lat, 'lng': latLng.lng});
+//                console.log(location.latLng());
+//                resultsMap.setCenter(latLng);
+                 
                 
                 // add markers to map with bounce animation   
                 marker = new google.maps.Marker({
@@ -292,10 +342,16 @@ var ViewModel = function(){
                 markersArray.push(marker);
                 marker.addListener('click', animateMarker);
             } else {
+            //credit to http://stackoverflow.com/questions/7649155/avoid-geocode-limit-on-custom-google-map-with-multiple-markers?lq=1     
+            if (status == google.maps.GeocoderStatus.OVER_QUERY_LIMIT)
+            {
+                geocodeTimeOutId = setTimeout(function() { geocodeAddress(location, geocoder, resultsMap);}, (1200));
+            }
+            else {
               alert('Geocode was not successful for the following reason: ' + status);
-              }
+            }
+            }
         });
-        
     }
         
     
@@ -353,43 +409,11 @@ var ViewModel = function(){
         self.initialLocationList().forEach(function(locItem){
             if ( locItem.category() === cat) {
                 self.selectedLocations.push(locItem);
-                self.addMarker(self.selectedLocations);
             }
         });
+        self.addMarker(self.selectedLocations);
     };
 };
-
-//load google map
-var map,
-    geocoder;
-function initMap() {
-    //Chennai generic latitude and longitude
-    var chennai = {lat: 13.0827, lng: 80.2707};
-    var mapOptions = {
-        zoom: 13,
-        center: chennai,
-        disableDefaultUI: true,
-        mapTypeId: google.maps.MapTypeId.ROADMAP,
-        mapTypeControl: true,
-        mapTypeControlOptions: {
-        style: google.maps.MapTypeControlStyle.HORIZONTAL_BAR,
-        position: google.maps.ControlPosition.LEFT_CENTER
-        },
-        zoomControl: true,
-        zoomControlOptions: {
-        position: google.maps.ControlPosition.RIGHT_BOTTOM
-        },
-        scaleControl: true,
-        streetViewControl: true,
-        streetViewControlOptions: {
-        position: google.maps.ControlPosition.RIGHT_BOTTOM
-        }
-    };
-    map = new google.maps.Map(document.getElementById("map"),
-    mapOptions);
-    geocoder = new google.maps.Geocoder();
-}
-
 
 //make it run
 ko.applyBindings(new ViewModel());
