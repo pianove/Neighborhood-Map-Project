@@ -302,17 +302,25 @@ var ViewModel = function(){
         var marker,
             contentString,
             infoWindow,
-        //bounce marker and open infoWindow when clicked
-        animateMarker = function() {
-            if (marker.getAnimation() !== null) {
-                marker.setAnimation(null);
-                infoWindow.close(resultsMap, marker);
-                self.clearWikipedia();
-            } else {
-                marker.setAnimation(google.maps.Animation.BOUNCE);
-                infoWindow.open(resultsMap, marker);
-            }
-        };
+            //reference to http://stackoverflow.com/questions/14657779/google-maps-bounce-animation-on-marker-for-a-limited-period
+            stopAnimation = function (marker) {
+                setTimeout(function () {
+                    marker.setAnimation(null);
+                }, 2500);
+            },
+            //bounce marker and open infoWindow when clicked
+            animateMarker = function() {
+                if (marker.getAnimation() !== null) {
+                    marker.setAnimation(null);
+                    infoWindow.close(resultsMap, marker);
+                    self.clearWikipedia();
+                } else {
+                    marker.setAnimation(google.maps.Animation.BOUNCE);
+                    stopAnimation(marker);
+                    infoWindow.open(resultsMap, marker);              
+                    } 
+                };
+        
         geocoder.geocode({'address': location.adress()}, function(results, status) {
             if (status === google.maps.GeocoderStatus.OK) {
                 i++;
@@ -338,7 +346,8 @@ var ViewModel = function(){
                     maxWidth: 280
                     
                 });
-                //cache markers for quick hide and show 
+                //cache markers for quick hide and show
+                //                infoWindow.open(resultsMap, marker);
                 markersArray.push(marker);
                 marker.addListener('click', animateMarker);
             } else {
