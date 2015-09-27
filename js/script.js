@@ -227,7 +227,13 @@ var Location = function(data) {
         return ('http://maps.googleapis.com/maps/api/streetview?size=600x400&location=' + this.adress() + '')
     },this);
 */    
-   
+  /* this.selected = ko.computed(function(){
+       var found = false;
+       if (this.category() === "Yoga"){
+           found = true;
+       }
+       return found;
+   }, this);*/
 };
 
 
@@ -254,37 +260,30 @@ var ViewModel = function(){
         self.currentLocation(clickedLocation);
         self.loadWikipedia();
     };
-
-    this.selectedLocations = ko.observableArray([]);
-    this.displayMessage = ko.observable("false");
     this.searchName = ko.observable("");
-    this.searchLocByName = function(){
-        //clear selectedLocations
-        self.selectedLocations.removeAll();
-        //clear markers from map
-        self.clearMarker();
-        //clear Wikipedia
-        self.clearWikipedia();
-        self.initialLocationList().forEach(function(locItem){
-            var n = locItem.name().search(new RegExp(self.searchName(), "i"));
-            if ( n != -1) {
-                self.selectedLocations.push(locItem);
-            }
-        });
-        self.addMarker(self.selectedLocations);
-    };    
+    this.selectedLocations = ko.computed(function(){
+        return ko.utils.arrayFilter(self.initialLocationList(),
+                    function (locItem){            
+                 var n = locItem.name().search(new RegExp(self.searchName(), "i"));   
+             return n != -1;
+                    });
+    });
     
-    
+//     self.clearMarker();
+//        //clear Wikipedia
+//        self.clearWikipedia(); 
+
     //cache markers for quick hide and show 
     var markersArray = [],
         geocodeTimeOutId;
 
     // convert hard coded location adresses into geographical coordinates and add markers to map
         // Resource: https://developers.google.com/maps/documentation/javascript/examples/geocoding-simple
-   this.addMarker = function(){};
-    this.addMarker = function (selectedLocations) {
-        selectedLocations().forEach(function(locationItem){
-            
+//   this.addMarker = function(){};
+    this.addMarker = function () {
+        self.selectedLocations().forEach(function(locationItem){
+            self.clearMarker();
+            self.clearWikipedia();
             geocodeAddress(locationItem, geocoder, map);
         });
     };
@@ -408,21 +407,6 @@ var ViewModel = function(){
 
 
         return false;
-    };
-    
-    this.filterLocationsByCategory = function(cat) {
-         //clear selectedLocations
-        self.selectedLocations.removeAll();
-        //clear markers from map
-        self.clearMarker();
-        //clear Wikipedia
-        self.clearWikipedia();
-        self.initialLocationList().forEach(function(locItem){
-            if ( locItem.category() === cat) {
-                self.selectedLocations.push(locItem);
-            }
-        });
-        self.addMarker(self.selectedLocations);
     };
 };
 
