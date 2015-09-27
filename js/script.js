@@ -358,9 +358,7 @@ var ViewModel = function(){
     this.clearWikipedia = function() {
         // clear out old data before new request
         var $wikiElem = $('#wikipedia-links');
-        
-        $('.wikipedia-container').css('display','none');
-        $wikiElem.text(""); 
+        $wikiElem.text("");
         
     };
     
@@ -382,6 +380,9 @@ var ViewModel = function(){
             jsonp: "callback",
             success: function( response ) {
                 var articleList = response[1];
+                if (response[1].length === 0){    
+                    $wikiElem.text("We could not find any relevant links");
+                }
                 for (var i = 0; i < articleList.length; i++) {
                     var articleStr = articleList[i];
                     var url = 'http://en.wikipedia.org/wiki/' + articleStr;
@@ -391,10 +392,11 @@ var ViewModel = function(){
     
                     }
                 }
-
                 clearTimeout(wikiRequestTimeout);
             }
         });
+       
+
 
         return false;
     };
