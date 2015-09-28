@@ -33,6 +33,13 @@
         font-size: 18px;
         margin-left: 5px;
         overflow:auto;
+        color: dimgrey;
+      }
+    
+      li.search-result:visited,
+      li.search-result:hover,
+      li.search-result:active {
+        color: black;
       }
         
       h4.sb_filter{
@@ -63,7 +70,7 @@
         position: absolute;
         padding-top: 10px;
         overflow: auto;
-        max-height: 300px;
+        max-height: 220px;
       }
 
       .info-title {
@@ -73,7 +80,7 @@
       }
     
       .search{
-            display: block;
+        display: block;
         }
         
       form.search {
@@ -89,17 +96,17 @@
         width:280px;
         padding:10px;
         background-color: rgba(255,255,255,0.7);
-        display: block;
+        display: none;
       }
     </style>
 </head>
 <body>
     <div class="search-container">
         <div class="col-xs-12 col-sm-6 col-lg-6">
-            <form id="ui_element" class="search" data-bind="submit:addMarker" >
-<!--                -->
+            <form id="ui_element" class="search"  >
+<!--data-bind="submit:addMarker"-->
                 <input class="sb_input" style="width: 185px" type="text" placeholder="Type here for search" data-bind="textInput: searchName">
-                <button id="submit-btn">Search</button>
+<!--                <button id="submit-btn">Search</button>-->
             </form>
         </div>
         <div  class="search-result col-xs-12 col-sm-6 col-lg-6"> <h4 class="sb_filter">Search result(s)</h4>

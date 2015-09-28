@@ -1,6 +1,7 @@
 //global variables to reach out in ViewModel once initMap() executed
 var map,
-    geocoder;
+    geocoder,
+    marker;
 
 //load google map
 function initMap() {
@@ -30,14 +31,12 @@ function initMap() {
     map = new google.maps.Map(document.getElementById("map"),
     mapOptions);
     geocoder = new google.maps.Geocoder();
-    
+    init.addMarker();
 }
 
 
 //=======Model=============
 // to hard code locations -Places to visit during my visit to Chennai in November 2015 as a FEND graduation present LOL
-
-var categories = ['Yoga', 'Accomodation', 'Must see', 'Shopping', 'Beaches', 'Nature', 'Restaurant', 'Art', 'Cooking'];
 var initialLocations = [
     {
     name: "Yoga Vahini",
@@ -220,23 +219,27 @@ var Location = function(data) {
     },this);
     this.category = ko.observable(data.category);
     this.description = ko.observable(data.description);
-    
     // for the next release to cache geocoordinates and enable streetview 
   /*  this.latLng = ko.observable(data.latLng);
     this.streetViewUrl = ko.computed(function(){
         return ('http://maps.googleapis.com/maps/api/streetview?size=600x400&location=' + this.adress() + '')
     },this);
-*/    
-  /* this.selected = ko.computed(function(){
-       var found = false;
-       if (this.category() === "Yoga"){
-           found = true;
-       }
-       return found;
-   }, this);*/
+*/ 
+    marker = new google.maps.Marker({
+    position: {13.1537, 80.2707},
+    animation: google.maps.Animation.DROP
+  });
+
+     this.isVisible = ko.observable(false);
+     this.isVisible.subscribe(function(currentState) {
+        if (currentState) {
+            marker.setMap(map);
+        } else {
+            marker.setMap(null);
+          }
+     });
+    
 };
-
-
 
 //======ViewModel=======================
 // makes the locations show up in a list
@@ -247,46 +250,68 @@ var ViewModel = function(){
     initialLocations.forEach(function(locationItem){
         self.initialLocationList.push(new Location(locationItem) );
     });
-    
-    this.categoryList = ko.observableArray([]);
-    categories.sort().forEach(function(catName){
-        self.categoryList.push(catName);
-    });
-
     //set the first element of initialLocations as current location
     this.currentLocation = ko.observable(this.initialLocationList()[0]);
     //set the currently selected location to the object passed in
+    
     this.setCurrentLocation = function(clickedLocation) {
         self.currentLocation(clickedLocation);
         self.loadWikipedia();
+        var i = self.getMarkerByName(clickedLocation.name());
+        var marker = markersArray[i];
+        marker.setVisible(true);
+        animateMarker(marker);
     };
     this.searchName = ko.observable("");
+    //filters search result array and listview if input matches
     this.selectedLocations = ko.computed(function(){
+        
         return ko.utils.arrayFilter(self.initialLocationList(),
                     function (locItem){            
-                 var n = locItem.name().search(new RegExp(self.searchName(), "i"));   
-             return n != -1;
+                 var n = locItem.name().search(new RegExp(self.searchName(), "i")),
+                     doesMatch = false;
+//                     j = self.getMarkerByName(locItem.name());
+//                     marker = markersArray[j];
+            if (n != -1){
+                doesMatch = true;
+                locItem.isVisible(doesMatch);
+//                marker.setVisible(doesMatch);
+                
+            } else {
+                doesMatch = false;
+//                marker.setVisible(doesMatch);
+            }
+            
+//             return n != -1;
+            return doesMatch;
                     });
     });
-    
-//     self.clearMarker();
-//        //clear Wikipedia
-//        self.clearWikipedia(); 
 
+    
     //cache markers for quick hide and show 
     var markersArray = [],
-        geocodeTimeOutId;
-
+//        marker,
+        geocodeTimeOutId,
+        infoWindow;
+    this.getMarkerByName = function(name){
+        var i;
+        markersArray.forEach(function(marker){
+            if (marker.getTitle() === name){
+                i = markersArray.indexOf(marker);
+            }
+         });
+        return i;
+    };
     // convert hard coded location adresses into geographical coordinates and add markers to map
         // Resource: https://developers.google.com/maps/documentation/javascript/examples/geocoding-simple
-//   this.addMarker = function(){};
     this.addMarker = function () {
-        self.selectedLocations().forEach(function(locationItem){
+        self.initialLocationList().forEach(function(locationItem){
             self.clearMarker();
             self.clearWikipedia();
             geocodeAddress(locationItem, geocoder, map);
         });
     };
+    
     //removes markers and clear markersArray
     //resource: http://stackoverflow.com/questions/1544739/google-maps-api-v3-how-to-remove-all-markers
     this.clearMarker = function() {
@@ -294,41 +319,36 @@ var ViewModel = function(){
             markersArray.pop().setMap(null);
         }
     };
-   var i = 0;
+    
+    
+    
+    //reference to http://stackoverflow.com/questions/14657779/google-maps-bounce-animation-on-marker-for-a-limited-period
+    function stopAnimation (marker) {
+        setTimeout(function () {
+        marker.setAnimation(null);
+        }, 2500);
+    }
+    //bounce marker and open infoWindow when clicked
+    function animateMarker (marker) {
+        if (marker.getAnimation() !== null) {
+            marker.setAnimation(null);
+//            marker.infoWindow.close(map, marker);
+    } else {
+        marker.setAnimation(google.maps.Animation.BOUNCE);
+        stopAnimation(marker);
+        marker.infoWindow.open(map, marker);         
+      }
+    }
+
+
         // function converts adress to geographical coordinates via geocoder services and add a marker and infoWindow to resultsMap
     //Resource: https://developers.google.com/maps/documentation/javascript/examples/geocoding-simple
     function geocodeAddress(location, geocoder, resultsMap) {
-        var marker,
-            contentString,
-            infoWindow,
-            //reference to http://stackoverflow.com/questions/14657779/google-maps-bounce-animation-on-marker-for-a-limited-period
-            stopAnimation = function (marker) {
-                setTimeout(function () {
-                    marker.setAnimation(null);
-                }, 2500);
-            },
-            //bounce marker and open infoWindow when clicked
-            animateMarker = function() {
-                if (marker.getAnimation() !== null) {
-                    marker.setAnimation(null);
-                    infoWindow.close(resultsMap, marker);
-                    self.clearWikipedia();
-                } else {
-                    marker.setAnimation(google.maps.Animation.BOUNCE);
-                    stopAnimation(marker);
-                    infoWindow.open(resultsMap, marker);              
-                    } 
-                };
-        
+//        var marker,
+//            var contentString;
         geocoder.geocode({'address': location.adress()}, function(results, status) {
             if (status === google.maps.GeocoderStatus.OK) {
-                i++;
                 var latLng = results[0].geometry.location;
-                console.log("ok" + i + location.name());
-//                 location.latLng({'lat': latLng.lat, 'lng': latLng.lng});
-//                console.log(location.latLng());
-//                resultsMap.setCenter(latLng);
-                 
                 
                 // add markers to map with bounce animation   
                 marker = new google.maps.Marker({
@@ -338,17 +358,16 @@ var ViewModel = function(){
                 title: location.name()
                 });
                 
-                //create infoWindow with location name and adress 
-                contentString = '<div class: "info-container"><div id="info-title">'+ '<b>' + location.name() + "</b></div>" + location.adress()  + '<p><b>' + "Category: " + location.category() + "</b></p>" +  '<p>' + location.description() + "</p></div>";
-                infoWindow = new google.maps.InfoWindow({
-                    content: contentString,
-                    maxWidth: 280
-                    
-                });
+                marker.setVisible(false);
+                marker.addListener('click', animateMarker(marker));
                 //cache markers for quick hide and show
-                //                infoWindow.open(resultsMap, marker);
                 markersArray.push(marker);
-                marker.addListener('click', animateMarker);
+                
+                marker.infoWindow = addInfoWindow(marker, location);
+                google.maps.event.addListener(marker, 'click', function () {
+                    animateMarker(marker);
+//                    marker.infoWindow.open(map, marker);
+                });
             } else {
             //credit to http://stackoverflow.com/questions/7649155/avoid-geocode-limit-on-custom-google-map-with-multiple-markers?lq=1     
             if (status == google.maps.GeocoderStatus.OVER_QUERY_LIMIT)
@@ -359,14 +378,25 @@ var ViewModel = function(){
               alert('Geocode was not successful for the following reason: ' + status);
             }
             }
-        });
+       });
     }
-        
     
+    function addInfoWindow(marker, location) {
+        var  contentString = '<div class: "info-container"><div id="info-title">'+ '<b>' + location.name() + "</b></div>" + location.adress()  + '<p><b>' + "Category: " + location.category() + "</b></p>" +  '<p>' + location.description() + "</p></div>";
+        var infoWindow = new google.maps.InfoWindow({
+            content: contentString,
+            maxWidth: 280
+        });
+        infoWindow.marker = marker;
+        return infoWindow;
+        
+    }
+
     this.clearWikipedia = function() {
         // clear out old data before new request
         var $wikiElem = $('#wikipedia-links');
         $wikiElem.text("");
+        $('.wikipedia-container').css('display','none');
         
     };
     
@@ -380,6 +410,7 @@ var ViewModel = function(){
         var wikiUrl = 'http://en.wikipedia.org/w/api.php?action=opensearch&search=' + location + '&format=json&callback=wikiCallback';
         var wikiRequestTimeout = setTimeout(function(){
             $wikiElem.text("failed to get wikipedia resources");
+            $('.wikipedia-container').css('display','inline');
         }, 8000);
 
         $.ajax({
@@ -390,6 +421,7 @@ var ViewModel = function(){
                 var articleList = response[1];
                 if (response[1].length === 0){    
                     $wikiElem.text("We could not find any relevant links");
+                    $('.wikipedia-container').css('display','inline');
                 }
                 for (var i = 0; i < articleList.length; i++) {
                     var articleStr = articleList[i];
@@ -411,4 +443,6 @@ var ViewModel = function(){
 };
 
 //make it run
-ko.applyBindings(new ViewModel());
+var init = new ViewModel();
+ko.applyBindings(init);
+//ko.applyBindings(new ViewModel());
