@@ -268,7 +268,7 @@ var ViewModel = function(){
     };
     
     //input value to search and filter
-    this.searchName = ko.observable("");
+    this.searchName = ko.observable("");    
     
     //filters search result array and listview if input matches
     //hide and show markers accordingly
@@ -288,6 +288,9 @@ var ViewModel = function(){
             return n != -1;
             });
     });   
+    
+    //select the first location on listview on submit
+    this.findLocation = ko.observable(this.selectedLocations()[0]);
     
     // to limit bouncing time for a few seconds
     //reference to http://stackoverflow.com/questions/14657779/google-maps-bounce-animation-on-marker-for-a-limited-period
