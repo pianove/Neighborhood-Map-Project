@@ -1,11 +1,12 @@
 ## Neighborhood Map project
 
 * <img src="img/myMap.bmp"></img>
+
 My application shows places on Google Map in Chennai that I have thoughtfully chosen previously.
 
-To select places you can either use the searchbar and type a word, the search being case insensitive, or by clicking on filter bar, you can choose a category to show respective locations. The category filter view hides when mouse leaves.
+To select places you can use the searchbar and start to type a word, the search being case insensitive, to show respective locations.
 
-To know more information about selected places, you only need to click on the place and related Wikipedia links might appear if any, or you can click on the marker and an infowindow will feed you information.
+To know more information about selected places, you only need to click on the place and related Wikipedia links might appear if and the corresponding marker will bounce with an infowindow popping up. To close the infowindow you shall use the close x icon on the right upper corner of the window. To get all these information, you can also simply click on a marker.
 
 I had much fun to select locations and build the application that I count to use during my trip to Chennai in Nov 2015, hopefully by the time as a FEND graduated student. 
 
@@ -20,7 +21,7 @@ Copy the below URL to your web browser:
 The development source code is under the default branch called Knockout and folder '/js/script.js' on github:
 https://github.com/pianove/Neighborhood-Map-Project
 
-The production code is linted/optimized and minified with gulp under 'public/js'.
+The production code is linted/optimized and minified with gulp under 'public/'.
 
 ### Libraries and API used
 
@@ -28,9 +29,9 @@ The production code is linted/optimized and minified with gulp under 'public/js'
 * [Google Maps API](https://developers.google.com/maps/documentation/javascript/ "Google Maps API") 
 * [Wikipedia API](http://www.mediawiki.org/wiki/ "Wikipedia API") 
 
-### Remaining Issues
+### Suggestions to next release
+Please, share your ideas to make my application more handy and enjoyable to You!
 
-The speed score is very low due to  render-blocking JavaScripts which are knockout, jquery, googlemaps and script.js.
  
 ### Resources
 * [Error handling](http://ruben.verborgh.org/blog/2012/12/31/asynchronous-error-handling-in-javascript/)
@@ -44,6 +45,6 @@ The application was built on <a href="http://getbootstrap.com/">Bootstrap</a> fr
 * <a href="http://getbootstrap.com/css/">Bootstrap's CSS Classes</a>
 * <a href="http://getbootstrap.com/components/">Bootstrap's Components</a>
 
-License
+### License
 
 MIT License
