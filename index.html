@@ -33,70 +33,28 @@
         font-size: 18px;
         margin-left: 5px;
         overflow:auto;
+        color: dimgrey;
+      }
+    
+      li.search-result:visited,
+      li.search-result:hover,
+      li.search-result:active {
+        color: black;
       }
         
-      ul.sb_dropdown{
-        float:left;
-        list-style:none;
-        max-width: 250px;
-        padding:0px 5px;
-        -moz-border-radius:0px 0px 10px 10px;
-        -webkit-border-bottom-right-radius:10px;
-        -webkit-border-bottom-left-radius:10px;
-        border-bottom-right-radius:10px;
-        border-bottom-left-radius:10px;
-        display: block;
-        margin: 0px 0px 5px 0px;
-      }
-      ul.sb_dropdown li{
-        font-size:16px;
-        line-height:32px;
-        height:32px;
-        float:left;
-        width:60%;
-        padding: 0px;
-      }
-      ul.sb_dropdown li input[type="checkbox"]{
-        float:left;
-        margin:10px 4px 0 5px;
-      }
-      li.sb_filter,
       h4.sb_filter{
-/*        float: left;*/
         list-style: none;
         padding-left: 10px;
         width:250px;
-        border:1px solid #f9f9f9;
         clear:both;
-        background: #ddd;
         font-size:12px;
         text-transform:uppercase;
         letter-spacing:1px;
         color:#444;
-/*        height:16px;*/
         line-height:16px;
         padding:5px;
-        -moz-box-shadow:0px 0px 2px #777;
-        -webkit-box-shadow:0px 0px 3px #555 inset;
-        -box-shadow:0px 0px 3px #555 inset;
-
       }
-      .sb_wrapper input[type="text"],
-      ul.sb_dropdown{
-        border:1px solid #fff;
-        background: #fafafa; 
-        background: -webkit-gradient(linear, left top, left bottom, from(#f2f2f2), to(#fafafa)); 
-        background: -moz-linear-gradient(top, #f2f2f2, #fafafa);
-        -moz-box-shadow:1px 1px 3px #555;
-        -webkit-box-shadow:1px 1px 3px #555;
-        -box-shadow:1px 1px 3px #555;
-        outline:none;
-        padding:6px 5px 6px 20px;
-        text-shadow:1px 1px 1px #fff;
-        width:295px;
-        float:left;
-      }
-  
+      
       .map {
         height: 100%;
         position: fixed !important;
@@ -112,7 +70,7 @@
         position: absolute;
         padding-top: 10px;
         overflow: auto;
-        max-height: 400px;
+        max-height: 220px;
       }
 
       .info-title {
@@ -122,7 +80,7 @@
       }
     
       .search{
-            display: block;
+        display: block;
         }
         
       form.search {
@@ -138,23 +96,20 @@
         width:280px;
         padding:10px;
         background-color: rgba(255,255,255,0.7);
-        display: block;
+        display: none;
       }
     </style>
 </head>
 <body>
     <div class="search-container">
         <div class="col-xs-12 col-sm-6 col-lg-6">
-            <form id="ui_element" class="search" data-bind="submit:searchLocByName">
+            <form id="ui_element" class="search"  >
+<!--data-bind="submit:addMarker"-->
                 <input class="sb_input" style="width: 185px" type="text" placeholder="Type here for search" data-bind="textInput: searchName">
-                <button id="submit-btn">Search</button>
-                <li  id="filter" class="search-category sb_filter">Click here to filter</li>
-                <ul class="sb_dropdown" style='display:none;' data-bind="foreach: categoryList" >
-                    <li data-bind="text: $data, click: $parent.filterLocationsByCategory"></li>
-                </ul>
+<!--                <button id="submit-btn">Search</button>-->
             </form>
         </div>
-        <div  class="search-result col-xs-12 col-sm-6 col-lg-6"> <h4 class="sb_filter">Selected locations:</h4>
+        <div  class="search-result col-xs-12 col-sm-6 col-lg-6"> <h4 class="sb_filter">Search result(s)</h4>
             <ul data-bind="foreach: selectedLocations">
                 <li class="search-result" data-bind="text: name, click:$parent.setCurrentLocation"></li>
             </ul>
@@ -165,36 +120,7 @@
     <div class="wikipedia-container">
         <h4 id="wikipedia-header">Relevant Wikipedia Links</h4>
         <ul id="wikipedia-links"></ul>
-    </div>
-<!--        Credit to http://tympanus.net/codrops/2010/07/14/ui-elements-search-box/ for snippet-->
-    <script>
-            $(document).ready(function() {
-				/**
-				* the element
-				*/
-				var $ui = $('#ui_element');
-				
-				/**
-				* on focus and on click display the dropdown,
-				*/
-				$ui.find('#filter').bind('focus click',function(){
-					$ui.andSelf()
-					   .find('.sb_dropdown')
-					   .show();
-				});
-				
-				/**
-				* on mouse leave hide the dropdown,
-				*/
-				$ui.bind('mouseleave',function(){
-					$ui.andSelf()
-					   .find('.sb_dropdown')
-					   .css("display","none");
-				});
-            });
-        </script>
-
-        
+    </div>        
     <script>
         window.onload = function () {
           var foundGoogle, img;
