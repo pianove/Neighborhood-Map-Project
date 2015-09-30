@@ -4,9 +4,14 @@
 
 My application shows places on Google Map in Chennai that I have thoughtfully chosen previously.
 
-To select places you can use the searchbar and start to type a word, the search being case insensitive, to show respective locations.
+To select places you can use the search bar and start to type a word to show respective locations.  The search is case insensitive.
 
-To know more information about selected places, you only need to click on the place and related Wikipedia links might appear if and the corresponding marker will bounce with an infowindow popping up. To close the infowindow you shall use the close x icon on the right upper corner of the window. To get all these information, you can also simply click on a marker.
+To know more information about selected places:
+you only need to click on the place and related Wikipedia links might appear if any and related marker will bounce for a few seconds with an infowindow popping up. 
+
+or you can also simply click on a marker to get more information on your location.
+
+To close the infowindow you shall use the close x icon on the right upper corner of the window. 
 
 I had much fun to select locations and build the application that I count to use during my trip to Chennai in Nov 2015, hopefully by the time as a FEND graduated student. 
 
@@ -35,9 +40,13 @@ Please, share your ideas to make my application more handy and enjoyable to You!
  
 ### Resources
 * [Error handling](http://ruben.verborgh.org/blog/2012/12/31/asynchronous-error-handling-in-javascript/)
-* [Search box embellishing](http://webdesign.tutsplus.com/tutorials/css-experiments-with-a-search-form-input-and-button--cms-22069)
 * [Binding handlers with map](https://groups.google.com/forum/#!searchin/knockoutjs/google$20map/knockoutjs/yIM7_ALFVE8/ipQO5bOKkegJ)
 * [Setting up http server on Windows](http://www.jhh.me/blog/2012/12/24/setting-up-http-server-on-windows-with-node-js/)
+* [Stackoverflow](http://stackoverflow.com/)
+* [Knock me out blog](http://www.knockmeout.net/)
+* [Knock out documentation](http://knockoutjs.com/documentation/introduction.html)
+* [Javascript scope and closures](http://toddmotto.com/everything-you-wanted-to-know-about-javascript-scope/)
+
 
 ### Customization with Bootstrap
 The application was built on <a href="http://getbootstrap.com/">Bootstrap</a> framework. All custom styles are inlined in the portfolio repo.
