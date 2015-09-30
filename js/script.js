@@ -2,7 +2,6 @@
 var map,
     geocoder;
 
-//load google map
 function initMap() {
     "use strict";
     //Chennai generic latitude and longitude
@@ -29,15 +28,12 @@ function initMap() {
     };
     map = new google.maps.Map(document.getElementById("map"),
     mapOptions);
-    geocoder = new google.maps.Geocoder();
-    
+    geocoder = new google.maps.Geocoder();    
 }
 
 
 //=======Model=============
-// to hard code locations -Places to visit during my visit to Chennai in November 2015 as a FEND graduation present LOL
-
-var categories = ['Yoga', 'Accomodation', 'Must see', 'Shopping', 'Beaches', 'Nature', 'Restaurant', 'Art', 'Cooking'];
+// to hard code locations -Places to visit during my trip to Chennai in November 2015 as a FEND graduation present LOL
 var initialLocations = [
     {
     name: "Yoga Vahini",
@@ -112,7 +108,7 @@ var initialLocations = [
     },
 
     {
-    name: 'San Thomas Church',
+    name: 'San Thome Basilica',
     street: ' 38, San Thome High Road',
     city: 'Chennai',
     category: 'Must see',
@@ -220,116 +216,109 @@ var Location = function(data) {
     },this);
     this.category = ko.observable(data.category);
     this.description = ko.observable(data.description);
-    
-    // for the next release to cache geocoordinates and enable streetview 
-  /*  this.latLng = ko.observable(data.latLng);
-    this.streetViewUrl = ko.computed(function(){
-        return ('http://maps.googleapis.com/maps/api/streetview?size=600x400&location=' + this.adress() + '')
-    },this);
-*/    
-   
 };
 
 
-
 //======ViewModel=======================
-// makes the locations show up in a list
+// makes the locations/markers/wikilinks show up in a list 
+// with a reali time search/filter function
 var ViewModel = function(){
     "use strict";
     var self = this;
-    this.initialLocationList = ko.observableArray([]);
-    initialLocations.forEach(function(locationItem){
-        self.initialLocationList.push(new Location(locationItem) );
-    });
-    
-    this.categoryList = ko.observableArray([]);
-    categories.sort().forEach(function(catName){
-        self.categoryList.push(catName);
-    });
-
-    //set the first element of initialLocations as current location
-    this.currentLocation = ko.observable(this.initialLocationList()[0]);
-    //set the currently selected location to the object passed in
-    this.setCurrentLocation = function(clickedLocation) {
-        self.currentLocation(clickedLocation);
-        self.loadWikipedia();
-    };
-
-    this.selectedLocations = ko.observableArray([]);
-    this.displayMessage = ko.observable("false");
-    this.searchName = ko.observable("");
-    this.searchLocByName = function(){
-        //clear selectedLocations
-        self.selectedLocations.removeAll();
-        //clear markers from map
-        self.clearMarker();
-        //clear Wikipedia
-        self.clearWikipedia();
-        self.initialLocationList().forEach(function(locItem){
-            var n = locItem.name().search(new RegExp(self.searchName(), "i"));
-            if ( n != -1) {
-                self.selectedLocations.push(locItem);
-            }
-        });
-        self.addMarker(self.selectedLocations);
-    };    
-    
+    var geocodeTimeOutId,
+        infoWindow,
+        i = 0;
     
     //cache markers for quick hide and show 
-    var markersArray = [],
-        geocodeTimeOutId;
+    this.markersArray = ko.observableArray([]);
+    
+    //add markers to map ref to hardcoded locations
+    this.addMarker = function (locationItem) {
+        geocodeAddress(locationItem, geocoder, map);
+    };
+    
+    this.initialLocationList = ko.observableArray([]);
+    initialLocations.forEach(function(locationItem){
+        self.initialLocationList.push(new Location(locationItem));
+        self.addMarker(self.initialLocationList()[i]);
+        i++;
+    });
+    
+    //set the currently selected location to the object passed in
+    this.currentLocation = ko.observable(this.initialLocationList()[0]);
+    
+    //helper function to select correspondant marker
+    this.getMarkerByName = function(name){
+        var i;
+        self.markersArray().forEach(function(marker){
+            if (marker.getTitle() === name){
+                i = self.markersArray().indexOf(marker);
+            }
+         });
+        return i;
+    };
+    
+    //click on location, animate marker,popup infowindow and wikilink
+    this.setCurrentLocation = function(clickedLocation) {
+        self.currentLocation(clickedLocation);
+        var i = self.getMarkerByName(clickedLocation.name());
+        var marker = self.markersArray()[i];
+        clickedLocation.marker.setVisible(true);
+        animateMarker(clickedLocation.marker);
+    };
+    
+    //input value to search and filter
+    this.searchName = ko.observable("");
+    
+    //filters search result array and listview if input matches
+    //hide and show markers accordingly
+    this.selectedLocations = ko.computed(function(){
+        return ko.utils.arrayFilter(self.initialLocationList(),
+                    function (locItem, index){
+                 var n = locItem.name().search(new RegExp(self.searchName(), "i")),
+                     doesMatch = false;
+                    var i = self.getMarkerByName(locItem.name());
+                    var marker = self.markersArray()[i];
+            if (marker !== undefined) {
+                if (n != -1){
+                    doesMatch = true;
+                }      
+                marker.setVisible(doesMatch);
+            }
+            return n != -1;
+            });
+    });   
+    
+    // to limit bouncing time for a few seconds
+    //reference to http://stackoverflow.com/questions/14657779/google-maps-bounce-animation-on-marker-for-a-limited-period
+    function stopAnimation (marker) {
+        setTimeout(function () {
+        marker.setAnimation(null);
+        }, 2500);
+    }
+    
+    //bounce marker and open infoWindow when clicked
+    function animateMarker (marker) {
+        if (marker.getAnimation() !== null) {
+            marker.setAnimation(null);
+    } else {
+        marker.setAnimation(google.maps.Animation.BOUNCE);
+        stopAnimation(marker);
+        marker.infoWindow.open(map, marker);
+        self.loadWikipedia(marker.title);
+      }
+    }
 
-    // convert hard coded location adresses into geographical coordinates and add markers to map
-        // Resource: https://developers.google.com/maps/documentation/javascript/examples/geocoding-simple
-   this.addMarker = function(){};
-    this.addMarker = function (selectedLocations) {
-        selectedLocations().forEach(function(locationItem){
-            
-            geocodeAddress(locationItem, geocoder, map);
-        });
-    };
-    //removes markers and clear markersArray
-    //resource: http://stackoverflow.com/questions/1544739/google-maps-api-v3-how-to-remove-all-markers
-    this.clearMarker = function() {
-        while(markersArray.length) { 
-            markersArray.pop().setMap(null);
-        }
-    };
-   var i = 0;
-        // function converts adress to geographical coordinates via geocoder services and add a marker and infoWindow to resultsMap
+
+    // function converts adress to geographical coordinates via geocoder services 
+    // and add a marker and infoWindow to map
     //Resource: https://developers.google.com/maps/documentation/javascript/examples/geocoding-simple
     function geocodeAddress(location, geocoder, resultsMap) {
-        var marker,
-            contentString,
-            infoWindow,
-            //reference to http://stackoverflow.com/questions/14657779/google-maps-bounce-animation-on-marker-for-a-limited-period
-            stopAnimation = function (marker) {
-                setTimeout(function () {
-                    marker.setAnimation(null);
-                }, 2500);
-            },
-            //bounce marker and open infoWindow when clicked
-            animateMarker = function() {
-                if (marker.getAnimation() !== null) {
-                    marker.setAnimation(null);
-                    infoWindow.close(resultsMap, marker);
-                    self.clearWikipedia();
-                } else {
-                    marker.setAnimation(google.maps.Animation.BOUNCE);
-                    stopAnimation(marker);
-                    infoWindow.open(resultsMap, marker);              
-                    } 
-                };
+        var marker;
         
         geocoder.geocode({'address': location.adress()}, function(results, status) {
             if (status === google.maps.GeocoderStatus.OK) {
-                i++;
-                var latLng = results[0].geometry.location;
-                console.log("ok" + i + location.name());
-//                 location.latLng({'lat': latLng.lat, 'lng': latLng.lng});
-//                console.log(location.latLng());
-//                resultsMap.setCenter(latLng);
-                 
+                location.latLng = results[0].geometry.location;
                 
                 // add markers to map with bounce animation   
                 marker = new google.maps.Marker({
@@ -339,18 +328,18 @@ var ViewModel = function(){
                 title: location.name()
                 });
                 
-                //create infoWindow with location name and adress 
-                contentString = '<div class: "info-container"><div id="info-title">'+ '<b>' + location.name() + "</b></div>" + location.adress()  + '<p><b>' + "Category: " + location.category() + "</b></p>" +  '<p>' + location.description() + "</p></div>";
-                infoWindow = new google.maps.InfoWindow({
-                    content: contentString,
-                    maxWidth: 280
-                    
-                });
+                marker.setVisible(false);
+                marker.infoWindow = addInfoWindow(marker, location);
                 //cache markers for quick hide and show
-                //                infoWindow.open(resultsMap, marker);
-                markersArray.push(marker);
-                marker.addListener('click', animateMarker);
+                self.markersArray.push(marker);
+                location.marker = marker;
+                
+//                http://toddmotto.com/everything-you-wanted-to-know-about-javascript-scope/
+            google.maps.event.addListener(location.marker, 'click', function(){
+                    animateMarker(marker);
+            }, false); 
             } else {
+            //to avoid query limit error alerts  
             //credit to http://stackoverflow.com/questions/7649155/avoid-geocode-limit-on-custom-google-map-with-multiple-markers?lq=1     
             if (status == google.maps.GeocoderStatus.OVER_QUERY_LIMIT)
             {
@@ -360,27 +349,40 @@ var ViewModel = function(){
               alert('Geocode was not successful for the following reason: ' + status);
             }
             }
-        });
+       });
     }
-        
     
+    function addInfoWindow(marker, location) {
+        var  contentString = '<div class: "info-container"><div id="info-title">'+ '<b>' + location.name() + "</b></div>" + location.adress()  + '<p><b>' + "Category: " + location.category() + "</b></p>" +  '<p>' + location.description() + "</p></div>";
+        var infoWindow = new google.maps.InfoWindow({
+            content: contentString,
+            maxWidth: 280
+        });
+        infoWindow.marker = marker;
+        return infoWindow;
+        
+    }
+
+    // clear out old wiki links before new request
     this.clearWikipedia = function() {
-        // clear out old data before new request
         var $wikiElem = $('#wikipedia-links');
         $wikiElem.text("");
+        $('.wikipedia-container').css('display','none');
         
     };
     
-    this.loadWikipedia = function() {
+    // load wikilinks
+    this.loadWikipedia = function(name) {
 
         var $wikiElem = $('#wikipedia-links');
-        var location = self.currentLocation().name();
+        var location = name;
         self.clearWikipedia();
 
         // load wikipedia data
         var wikiUrl = 'http://en.wikipedia.org/w/api.php?action=opensearch&search=' + location + '&format=json&callback=wikiCallback';
         var wikiRequestTimeout = setTimeout(function(){
             $wikiElem.text("failed to get wikipedia resources");
+            $('.wikipedia-container').css('display','inline');
         }, 8000);
 
         $.ajax({
@@ -391,6 +393,7 @@ var ViewModel = function(){
                 var articleList = response[1];
                 if (response[1].length === 0){    
                     $wikiElem.text("We could not find any relevant links");
+                    $('.wikipedia-container').css('display','inline');
                 }
                 for (var i = 0; i < articleList.length; i++) {
                     var articleStr = articleList[i];
@@ -409,22 +412,11 @@ var ViewModel = function(){
 
         return false;
     };
-    
-    this.filterLocationsByCategory = function(cat) {
-         //clear selectedLocations
-        self.selectedLocations.removeAll();
-        //clear markers from map
-        self.clearMarker();
-        //clear Wikipedia
-        self.clearWikipedia();
-        self.initialLocationList().forEach(function(locItem){
-            if ( locItem.category() === cat) {
-                self.selectedLocations.push(locItem);
-            }
-        });
-        self.addMarker(self.selectedLocations);
-    };
 };
 
-//make it run
-ko.applyBindings(new ViewModel());
+//make it run once google.maps fired up initMap()
+//ref http://stackoverflow.com/questions/20718183/adding-google-maps-with-knockoutjs?rq=1
+  
+$(window).load(function() {
+    ko.applyBindings(new ViewModel());    
+});
