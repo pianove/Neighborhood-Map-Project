@@ -1,6 +1,6 @@
 ## Neighborhood Map project
 
-* <img src="img/myMap.bmp"></img>
+* <img src="img/myMap.png"></img>
 
 My application shows places on Google Map in Chennai that I have thoughtfully chosen previously.
 

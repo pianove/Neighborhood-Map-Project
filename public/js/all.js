@@ -5,7 +5,7 @@ var map,
 function initMap() {
     "use strict";
     //Chennai generic latitude and longitude
-    var chennai = {lat: 13.1537, lng: 80.2707},
+    var chennai = {lat: 13.2537, lng: 80.2707},
     mapOptions = {
         zoom: 11,
         center: chennai,
@@ -239,7 +239,6 @@ var ViewModel = function(){
     this.initialLocationList = ko.observableArray([]);
     initialLocations.forEach(function(locationItem){
         self.initialLocationList.push(new Location(locationItem));
-        console.log(locationItem.category);
         self.addMarker(self.initialLocationList()[i]);
         i++;
     });
