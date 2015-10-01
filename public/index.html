@@ -49,10 +49,12 @@
         
       .search-container {
         background-color: rgba(255,255,255,0.7);
-        position: absolute;
-        padding-top: 10px;
+        position: relative;
+        padding: 10px;
         overflow: auto;
         max-height: 220px;
+        max-width: 330px;
+        float: right;
       }
 
       .info-title {
@@ -72,7 +74,7 @@
       .info-container {
         float: bottom;
       }
-    </style></head><body><div class="search-container"><div class="col-xs-12 col-sm-6 col-lg-6"><form id="ui_element" class="search" data-bind="submit: findLocation"><input class="sb_input" style="width: 185px" type="text" placeholder="Type here for search" data-bind="textInput: searchName"></form></div><div class="search-result col-xs-12 col-sm-6 col-lg-6"><h4 class="sb_filter">Search result(s)</h4><ul data-bind="foreach: selectedLocations"><li class="search-result" data-bind="text: name, click:$parent.setCurrentLocation"></li></ul></div><div id="map" class="map" alt="Google Map"></div><div id="no-map" alt="In lieu of Google Maps"></div><script>
+    </style></head><body><div class="search-container"><div class><form id="ui_element" class="search" data-bind="submit: findLocation"><input class="sb_input" style="width: 275px" type="text" placeholder="Type here for search" data-bind="textInput: searchName"></form></div><div class="search-result"><h4 class="sb_filter">Search result(s)</h4><ul data-bind="foreach: selectedLocations"><li class="search-result" data-bind="text: name, click:$parent.setCurrentLocation"></li></ul></div><div id="map" class="map" alt="Google Map"></div><div id="no-map" alt="In lieu of Google Maps"></div><script>
         window.onload = function () {
           var foundGoogle, img;
           foundGoogle = typeof google === 'object' && typeof google.maps === 'object';

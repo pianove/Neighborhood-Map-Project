@@ -69,10 +69,12 @@
         
       .search-container {
         background-color: rgba(255,255,255,0.7);
-        position: absolute;
-        padding-top: 10px;
+        position: relative;
+        padding: 10px;
         overflow: auto;
         max-height: 220px;
+        max-width: 330px;
+        float: right;
       }
 
       .info-title {
@@ -96,13 +98,12 @@
 </head>
 <body>
     <div class="search-container">
-        <div class="col-xs-12 col-sm-6 col-lg-6">
+            <div class="">
             <form id="ui_element" class="search" data-bind="submit: findLocation">
-                <input class="sb_input" style="width: 185px" type="text" placeholder="Type here for search" data-bind="textInput: searchName">
-<!--                <button id="submit-btn">Search</button>-->
+                <input class="sb_input" style="width: 275px" type="text" placeholder="Type here for search" data-bind="textInput: searchName">
             </form>
         </div>
-        <div  class="search-result col-xs-12 col-sm-6 col-lg-6"> <h4 class="sb_filter">Search result(s)</h4>
+        <div  class="search-result"> <h4 class="sb_filter">Search result(s)</h4>
             <ul data-bind="foreach: selectedLocations">
                 <li class="search-result" data-bind="text: name, click:$parent.setCurrentLocation"></li>
             </ul>
