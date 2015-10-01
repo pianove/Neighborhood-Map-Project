@@ -328,7 +328,7 @@ var ViewModel = function(){
                 animation: google.maps.Animation.DROP,
                 position: results[0].geometry.location,
                 title: location.name(),
-                icon: '/img/must_see.png'
+                icon: 'public/img/must_see.png'
                 });
                 
                 marker.setVisible(false);
