@@ -321,22 +321,22 @@ var ViewModel = function(){
         //credit to https://developers.google.com/maps/tutorials/customizing/custom-markers
         var icons = {
               yoga: {
-                icon: '/public/img/yoga.png'
+                icon: 'public/img/yoga.png'
               },
               accomodation: {
-                icon: '/public/img/hotel.png'
+                icon: 'public/img/hotel.png'
               },
               mustsee: {
-                icon: '/public/img/must_see.png'
+                icon: 'public/img/must_see.png'
               },
               shopping: {
-                icon: '/public/img/shopping.png'
+                icon: 'public/img/shopping.png'
               },
               beach: {
-                icon: '/public/img/beach.png'
+                icon: 'public/img/beach.png'
               },
               restaurant: {
-                icon: '/public/img/restaurant.png'
+                icon: 'public/img/restaurant.png'
               }
         };
         
