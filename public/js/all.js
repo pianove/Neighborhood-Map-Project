@@ -218,6 +218,11 @@ var Location = function(data) {
     this.description = ko.observable(data.description);
 };
 
+//to construct wikipedia links
+var WikiLink = function(){
+    this.url = ko.observable();
+    this.title = ko.observable();
+};
 
 //======ViewModel=======================
 // makes the locations/markers/wikilinks show up in a list 
@@ -236,7 +241,7 @@ var ViewModel = function(){
     this.addMarker = function (locationItem) {
         geocodeAddress(locationItem, geocoder, map);
     };
-    
+    //creates locations and markers/infowindows
     this.initialLocationList = ko.observableArray([]);
     initialLocations.forEach(function(locationItem){
         self.initialLocationList.push(new Location(locationItem));
@@ -308,7 +313,7 @@ var ViewModel = function(){
         marker.setAnimation(google.maps.Animation.BOUNCE);
         stopAnimation(marker);
         marker.infoWindow.open(map, marker);
-        self.loadWikipedia(marker.title);
+//        self.loadWikipedia(marker.title);
       }
     }
 
@@ -318,6 +323,7 @@ var ViewModel = function(){
     //Resource: https://developers.google.com/maps/documentation/javascript/examples/geocoding-simple
     function geocodeAddress(location, geocoder, resultsMap) {
         var marker;
+        var iconBase = 'https://maps.google.com/mapfiles/kml/shapes/';
         
         geocoder.geocode({'address': location.adress()}, function(results, status) {
             if (status === google.maps.GeocoderStatus.OK) {
@@ -328,7 +334,8 @@ var ViewModel = function(){
                 map: resultsMap,
                 animation: google.maps.Animation.DROP,
                 position: results[0].geometry.location,
-                title: location.name()
+                title: location.name(),
+                icon: '/img/yoga1.png'
                 });
                 
                 marker.setVisible(false);
@@ -365,13 +372,54 @@ var ViewModel = function(){
         return infoWindow;
         
     }
-
+    //inspired by http://stackoverflow.com/questions/13222570/search-form-handling-with-knockout-js
+    /*var wikiLink = {
+        url:"",
+        title:""
+    };*/
+    
+    var wikiLink = new WikiLink();
+    this.queryResults = ko.observableArray([]);
+    
+    
+    ko.computed(function() {
+        //call wiki
+        var wikiUrl = 'http://en.wikipedia.org/w/api.php?action=opensearch&search=' + self.currentLocation().name() + '&format=json&callback=wikiCallback';
+        /*var wikiRequestTimeout = setTimeout(function(){
+            $wikiElem.text("failed to get wikipedia resources");
+            $('.wikipedia-container').css('display','inline');
+        }, 8000);*/
+     
+        $.ajax({
+            url: wikiUrl,
+            dataType: "jsonp",
+            jsonp: "callback",
+            success: function( response ) {
+                var articleList = response[1];
+                if (response[1].length === 0){    
+                    var titleStr = "We could not find any relevant links";
+                    var url ="";
+                    wikiLink.url(url).title(titleStr);
+                    self.queryResults.push(wikiLink);
+                     console.log(self.queryResults()[0].title());
+                }
+                for (var i = 0; i < articleList.length; i++) {
+                    var articleStr = articleList[i];
+                    var link = 'http://en.wikipedia.org/wiki/' + response[1];        
+                    wikiLink.url(link).title(articleStr);
+                    self.queryResults()[i](wikiLink);
+                    console.log(self.queryResults()[i].title());
+                }
+            }
+//                clearTimeout(wikiRequestTimeout);
+        });
+    },this);    
+    
     // clear out old wiki links before new request
     this.clearWikipedia = function() {
         var $wikiElem = $('#wikipedia-links');
         $wikiElem.text("");
         $('.wikipedia-container').css('display','none');
-        
     };
     
     // load wikilinks
@@ -416,6 +464,7 @@ var ViewModel = function(){
         return false;
     };
 };
+
 
 //make it run once google.maps fired up initMap()
 //ref http://stackoverflow.com/questions/20718183/adding-google-maps-with-knockoutjs?rq=1
