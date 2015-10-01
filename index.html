@@ -92,14 +92,6 @@
       .info-container {
         float: bottom;
       }
-    
-      .wikipedia-container {
-        float:left;
-        width:280px;
-        padding:10px;
-        background-color: rgba(255,255,255,0.7);
-        display: none;
-      }
     </style>
 </head>
 <body>
@@ -118,10 +110,6 @@
 
     <div id="map" class="map"  alt="Google Map"></div>
     <div id="no-map" alt="In lieu of Google Maps"></div>
-    <div class="wikipedia-container">
-        <h4 id="wikipedia-header">Relevant Wikipedia Links</h4>
-        <ul id="wikipedia-links"></ul>
-    </div>        
     <script>
         window.onload = function () {
           var foundGoogle, img;

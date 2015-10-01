@@ -218,12 +218,6 @@ var Location = function(data) {
     this.description = ko.observable(data.description);
 };
 
-//to construct wikipedia links
-var WikiLink = function(){
-    this.url = ko.observable();
-    this.title = ko.observable();
-};
-
 //======ViewModel=======================
 // makes the locations/markers/wikilinks show up in a list 
 // with a reali time search/filter function
@@ -313,7 +307,7 @@ var ViewModel = function(){
         marker.setAnimation(google.maps.Animation.BOUNCE);
         stopAnimation(marker);
         marker.infoWindow.open(map, marker);
-//        self.loadWikipedia(marker.title);
+        self.loadWikipedia(marker.title);
       }
     }
 
@@ -323,7 +317,6 @@ var ViewModel = function(){
     //Resource: https://developers.google.com/maps/documentation/javascript/examples/geocoding-simple
     function geocodeAddress(location, geocoder, resultsMap) {
         var marker;
-        var iconBase = 'https://maps.google.com/mapfiles/kml/shapes/';
         
         geocoder.geocode({'address': location.adress()}, function(results, status) {
             if (status === google.maps.GeocoderStatus.OK) {
@@ -335,7 +328,7 @@ var ViewModel = function(){
                 animation: google.maps.Animation.DROP,
                 position: results[0].geometry.location,
                 title: location.name(),
-                icon: '/img/yoga1.png'
+                icon: '/img/must_see.png'
                 });
                 
                 marker.setVisible(false);
@@ -363,63 +356,19 @@ var ViewModel = function(){
     }
     
     function addInfoWindow(marker, location) {
-        var  contentString = '<div class: "info-container"><div id="info-title">'+ '<b>' + location.name() + "</b></div>" + location.adress()  + '<p><b>' + "Category: " + location.category() + "</b></p>" +  '<p>' + location.description() + "</p></div>";
+        var  contentString = '<div class= "info-container"><div id="info-title">'+ '<b>' + location.name() + "</b></div>" + location.adress()  + '<p><b>' + "Category: " + location.category() + "</b></p>" +  '<p>' + location.description() + "</p>" + '<p><b>' + "Wikipedia Links: " + "</b><p><ul id='wikipedia-links'></ul>" + "</div>";
         var infoWindow = new google.maps.InfoWindow({
             content: contentString,
             maxWidth: 280
         });
         infoWindow.marker = marker;
-        return infoWindow;
-        
+        return infoWindow;    
     }
-    //inspired by http://stackoverflow.com/questions/13222570/search-form-handling-with-knockout-js
-    /*var wikiLink = {
-        url:"",
-        title:""
-    };*/
-    
-    var wikiLink = new WikiLink();
-    this.queryResults = ko.observableArray([]);
-    
-    
-    ko.computed(function() {
-        //call wiki
-        var wikiUrl = 'http://en.wikipedia.org/w/api.php?action=opensearch&search=' + self.currentLocation().name() + '&format=json&callback=wikiCallback';
-        /*var wikiRequestTimeout = setTimeout(function(){
-            $wikiElem.text("failed to get wikipedia resources");
-            $('.wikipedia-container').css('display','inline');
-        }, 8000);*/
-     
-        $.ajax({
-            url: wikiUrl,
-            dataType: "jsonp",
-            jsonp: "callback",
-            success: function( response ) {
-                var articleList = response[1];
-                if (response[1].length === 0){    
-                    var titleStr = "We could not find any relevant links";
-                    var url ="";
-                    wikiLink.url(url).title(titleStr);
-                    self.queryResults.push(wikiLink);
-                     console.log(self.queryResults()[0].title());
-                }
-                for (var i = 0; i < articleList.length; i++) {
-                    var articleStr = articleList[i];
-                    var link = 'http://en.wikipedia.org/wiki/' + response[1];        
-                    wikiLink.url(link).title(articleStr);
-                    self.queryResults()[i](wikiLink);
-                    console.log(self.queryResults()[i].title());
-                }
-            }
-//                clearTimeout(wikiRequestTimeout);
-        });
-    },this);    
     
     // clear out old wiki links before new request
     this.clearWikipedia = function() {
         var $wikiElem = $('#wikipedia-links');
         $wikiElem.text("");
-        $('.wikipedia-container').css('display','none');
     };
     
     // load wikilinks
@@ -432,8 +381,7 @@ var ViewModel = function(){
         // load wikipedia data
         var wikiUrl = 'http://en.wikipedia.org/w/api.php?action=opensearch&search=' + location + '&format=json&callback=wikiCallback';
         var wikiRequestTimeout = setTimeout(function(){
-            $wikiElem.text("failed to get wikipedia resources");
-            $('.wikipedia-container').css('display','inline');
+            $wikiElem.text("Failed to get wikipedia resources");
         }, 8000);
 
         $.ajax({
@@ -444,23 +392,15 @@ var ViewModel = function(){
                 var articleList = response[1];
                 if (response[1].length === 0){    
                     $wikiElem.text("We could not find any relevant links");
-                    $('.wikipedia-container').css('display','inline');
                 }
                 for (var i = 0; i < articleList.length; i++) {
                     var articleStr = articleList[i];
                     var url = 'http://en.wikipedia.org/wiki/' + articleStr;
                     $wikiElem.append('<li><a href="' + url + '">' + articleStr + '</a></li>');
-                    if (articleList.length > 0) {
-                        $('.wikipedia-container').css('display','inline');
-    
-                    }
                 }
                 clearTimeout(wikiRequestTimeout);
             }
         });
-       
-
-
         return false;
     };
 };
