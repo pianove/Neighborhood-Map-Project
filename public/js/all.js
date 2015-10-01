@@ -5,7 +5,7 @@ var map,
 function initMap() {
     "use strict";
     //Chennai generic latitude and longitude
-    var chennai = {lat: 13.1537, lng: 80.2707},
+    var chennai = {lat: 13.2537, lng: 80.2707},
     mapOptions = {
         zoom: 11,
         center: chennai,
@@ -127,7 +127,7 @@ var initialLocations = [
     name: 'Marina Beach',
     street: 'Marina Beach',
     city: 'Chennai',
-    category: 'Beaches',
+    category: 'Beach',
     description: "This expansive beach is Chennai's most famous tourist attraction, though the undercurrent is too strong for all but the strongest swimmers."
     },
 
@@ -135,7 +135,7 @@ var initialLocations = [
     name: 'Breezy Beach',
     street: 'Valmiki Nagar',
     city: 'Chennai',
-    category: 'Beaches',
+    category: 'Beach',
     description: "this is the only beach which is best secured and peaceful as well in the whole lot of chennai beaches '('except on holidays and week ends which is heavily crowded')'. Secured because police patrolling is available."
     },
 
@@ -143,7 +143,7 @@ var initialLocations = [
     name: 'Chennai Turtle Walk',
     street: '8/25, 2nd Street, DP Nagar, Kotturpuram',
     city: 'Chennai',
-    category: 'Nature',
+    category: 'Must see',
     description: "Join independent conservation and wildlife enthusiast groups such as the Students’ Sea Turtle Conservation Network for midnight walks from Neelangarai to Besant Nagar beach to aid the endangered Olive Ridley sea turtle by relocating eggs for safe release to the sea."
     },
 
@@ -159,7 +159,7 @@ var initialLocations = [
     name: 'Kalakshetra Dance School',
     street: 'Thiruvanmiyur',
     city: 'Chennai',
-    category: 'Art',
+    category: 'Must see',
     description: "Kalakshetra has been around since 1936. Many subtle nuances existed in the making of this institution — a symbol of uprising against the British, commitment to theosophy and creation of a strong identity for Indian classical dance forms."
     },
 
@@ -175,7 +175,7 @@ var initialLocations = [
     name: 'M.Rm.Rm. Cultural Foundation',
     street: 'Thyagaraya Road',
     city: 'Chennai',
-    category: 'Art',
+    category: 'Shopping',
     description: "The MRM Foundation is a nonprofit organization that documents and supports revival of rural crafts, textiles and architecture. Keep walking on MRC Nagar Main Rd after passing the SUN TV then turn left. You will find your paradise on your left!"
     },
 
@@ -183,7 +183,7 @@ var initialLocations = [
     name: 'Kitchen e Lazeez',
     street: '68/1, Q Block,Ground Floor, 15th Street | Annanagar East',
     city: 'Chennai',
-    category: 'Cooking',
+    category: 'Restaurant',
     description: "If u want to learn cooking it's one of the best places to visit. Do check their Facebook page (facebook.com/kitchenelazeez) events section and plan accordingly. Classes on Saturdays and Mondays only."
     },
 
@@ -191,7 +191,7 @@ var initialLocations = [
     name: 'Mudumalai National Park',
     street: '',
     city: 'Theppakadu',
-    category: 'Nature',
+    category: 'Must see',
     description: "The protected area is home to several endangered and vulnerable species including Indian elephant, Bengal tiger, gaur and Indian leopard. There are at least 266 species of birds in the sanctuary, including critically endangered Indian white-rumped vulture and long-billed vulture. Elephant Safari and Van Safari, conducted by the Tamil Nadu Forest Department, depart from park headquarters at Theppakadu"
     },
 
@@ -199,7 +199,7 @@ var initialLocations = [
     name: 'Mamallapuram',
     street: 'Varaha Cave',
     city: 'Mamallapuram',
-    category: 'Nature',
+    category: 'Must see',
     description: "A tourist town 60 km south of Chennai famous for its stone carvings.You can also catch the bus from Pondicherry. Learn how to surf with MUMU SURF SCHOOL in Mahabalipuram. If you are looking for an adventure in the Bay of Bengal, go and see Mukesh alias Mumu '('qualified Surfinstructor, Emergency Responder and Rescue Scuba Diver')'"
     }
 ];
@@ -317,18 +317,40 @@ var ViewModel = function(){
     //Resource: https://developers.google.com/maps/documentation/javascript/examples/geocoding-simple
     function geocodeAddress(location, geocoder, resultsMap) {
         var marker;
+        //set icons per category
+        //credit to https://developers.google.com/maps/tutorials/customizing/custom-markers
+        var icons = {
+              yoga: {
+                icon: '/public/img/yoga.png'
+              },
+              accomodation: {
+                icon: '/public/img/hotel.png'
+              },
+              mustsee: {
+                icon: '/public/img/must_see.png'
+              },
+              shopping: {
+                icon: '/public/img/shopping.png'
+              },
+              beach: {
+                icon: '/public/img/beach.png'
+              },
+              restaurant: {
+                icon: '/public/img/restaurant.png'
+              }
+        };
         
         geocoder.geocode({'address': location.adress()}, function(results, status) {
             if (status === google.maps.GeocoderStatus.OK) {
                 location.latLng = results[0].geometry.location;
-                
+                var cat = location.category().toLowerCase().replace(" ", "");
                 // add markers to map with bounce animation   
                 marker = new google.maps.Marker({
                 map: resultsMap,
                 animation: google.maps.Animation.DROP,
                 position: results[0].geometry.location,
                 title: location.name(),
-                icon: 'public/img/must_see.png'
+                icon: icons[cat].icon 
                 });
                 
                 marker.setVisible(false);
