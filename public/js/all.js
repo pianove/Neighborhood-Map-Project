@@ -218,7 +218,6 @@ var Location = function(data) {
     this.description = ko.observable(data.description);
 };
 
-
 //======ViewModel=======================
 // makes the locations/markers/wikilinks show up in a list 
 // with a reali time search/filter function
@@ -236,7 +235,7 @@ var ViewModel = function(){
     this.addMarker = function (locationItem) {
         geocodeAddress(locationItem, geocoder, map);
     };
-    
+    //creates locations and markers/infowindows
     this.initialLocationList = ko.observableArray([]);
     initialLocations.forEach(function(locationItem){
         self.initialLocationList.push(new Location(locationItem));
@@ -328,7 +327,8 @@ var ViewModel = function(){
                 map: resultsMap,
                 animation: google.maps.Animation.DROP,
                 position: results[0].geometry.location,
-                title: location.name()
+                title: location.name(),
+                icon: '/img/must_see.png'
                 });
                 
                 marker.setVisible(false);
@@ -356,22 +356,19 @@ var ViewModel = function(){
     }
     
     function addInfoWindow(marker, location) {
-        var  contentString = '<div class: "info-container"><div id="info-title">'+ '<b>' + location.name() + "</b></div>" + location.adress()  + '<p><b>' + "Category: " + location.category() + "</b></p>" +  '<p>' + location.description() + "</p></div>";
+        var  contentString = '<div class= "info-container"><div id="info-title">'+ '<b>' + location.name() + "</b></div>" + location.adress()  + '<p><b>' + "Category: " + location.category() + "</b></p>" +  '<p>' + location.description() + "</p>" + '<p><b>' + "Wikipedia Links: " + "</b><p><ul id='wikipedia-links'></ul>" + "</div>";
         var infoWindow = new google.maps.InfoWindow({
             content: contentString,
             maxWidth: 280
         });
         infoWindow.marker = marker;
-        return infoWindow;
-        
+        return infoWindow;    
     }
-
+    
     // clear out old wiki links before new request
     this.clearWikipedia = function() {
         var $wikiElem = $('#wikipedia-links');
         $wikiElem.text("");
-        $('.wikipedia-container').css('display','none');
-        
     };
     
     // load wikilinks
@@ -384,8 +381,7 @@ var ViewModel = function(){
         // load wikipedia data
         var wikiUrl = 'http://en.wikipedia.org/w/api.php?action=opensearch&search=' + location + '&format=json&callback=wikiCallback';
         var wikiRequestTimeout = setTimeout(function(){
-            $wikiElem.text("failed to get wikipedia resources");
-            $('.wikipedia-container').css('display','inline');
+            $wikiElem.text("Failed to get wikipedia resources");
         }, 8000);
 
         $.ajax({
@@ -396,26 +392,19 @@ var ViewModel = function(){
                 var articleList = response[1];
                 if (response[1].length === 0){    
                     $wikiElem.text("We could not find any relevant links");
-                    $('.wikipedia-container').css('display','inline');
                 }
                 for (var i = 0; i < articleList.length; i++) {
                     var articleStr = articleList[i];
                     var url = 'http://en.wikipedia.org/wiki/' + articleStr;
                     $wikiElem.append('<li><a href="' + url + '">' + articleStr + '</a></li>');
-                    if (articleList.length > 0) {
-                        $('.wikipedia-container').css('display','inline');
-    
-                    }
                 }
                 clearTimeout(wikiRequestTimeout);
             }
         });
-       
-
-
         return false;
     };
 };
+
 
 //make it run once google.maps fired up initMap()
 //ref http://stackoverflow.com/questions/20718183/adding-google-maps-with-knockoutjs?rq=1
