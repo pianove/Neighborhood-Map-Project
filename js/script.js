@@ -364,11 +364,7 @@ var ViewModel = function(){
                 self.markersArray.push(marker);                
 //                http://toddmotto.com/everything-you-wanted-to-know-about-javascript-scope/
                 google.maps.event.addListener(marker, 'click', function(){
-                    infoWindowGlobal.close(map, marker);
-                    infoWindowGlobal = addInfoWindow(this, location);
-                    animateMarker(this);
-                    infoWindowGlobal.open(map, this);
-                    self.loadWikipedia(marker.title);
+                    this.onClick();
                    }, false); 
             } else {
             //to avoid query limit error alerts  
