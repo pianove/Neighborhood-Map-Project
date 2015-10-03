@@ -225,7 +225,9 @@ var ViewModel = function(){
     "use strict";
     var self = this;
     var geocodeTimeOutId,
-        infoWindow,
+        infoWindowGlobal = new google.maps.InfoWindow({
+            maxWidth: 280
+        }),
         i = 0;
     
     //cache markers for quick hide and show 
@@ -262,8 +264,7 @@ var ViewModel = function(){
         self.currentLocation(clickedLocation);
         var i = self.getMarkerByName(clickedLocation.name());
         var marker = self.markersArray()[i];
-        clickedLocation.marker.setVisible(true);
-        animateMarker(clickedLocation.marker);
+        marker.onClick();
     };
     
     //input value to search and filter
@@ -288,6 +289,7 @@ var ViewModel = function(){
             });
     });   
     
+    
     //select the first location on listview on submit
     this.findLocation = ko.observable(this.selectedLocations()[0]);
     
@@ -306,12 +308,9 @@ var ViewModel = function(){
     } else {
         marker.setAnimation(google.maps.Animation.BOUNCE);
         stopAnimation(marker);
-        marker.infoWindow.open(map, marker);
-        self.loadWikipedia(marker.title);
       }
     }
-
-
+    
     // function converts adress to geographical coordinates via geocoder services 
     // and add a marker and infoWindow to map
     //Resource: https://developers.google.com/maps/documentation/javascript/examples/geocoding-simple
@@ -350,19 +349,27 @@ var ViewModel = function(){
                 animation: google.maps.Animation.DROP,
                 position: results[0].geometry.location,
                 title: location.name(),
-                icon: icons[cat].icon 
+                icon: icons[cat].icon,
+                onClick: function(){
+                            infoWindowGlobal.close(map, marker);
+                            infoWindowGlobal = addInfoWindow(this, location);
+                            animateMarker(this);
+                            infoWindowGlobal.open(map, this);
+                            self.loadWikipedia(marker.title);
+                        }
                 });
                 
                 marker.setVisible(false);
-                marker.infoWindow = addInfoWindow(marker, location);
                 //cache markers for quick hide and show
-                self.markersArray.push(marker);
-                location.marker = marker;
-                
+                self.markersArray.push(marker);                
 //                http://toddmotto.com/everything-you-wanted-to-know-about-javascript-scope/
-            google.maps.event.addListener(location.marker, 'click', function(){
-                    animateMarker(marker);
-            }, false); 
+                google.maps.event.addListener(marker, 'click', function(){
+                    infoWindowGlobal.close(map, marker);
+                    infoWindowGlobal = addInfoWindow(this, location);
+                    animateMarker(this);
+                    infoWindowGlobal.open(map, this);
+                    self.loadWikipedia(marker.title);
+                   }, false); 
             } else {
             //to avoid query limit error alerts  
             //credit to http://stackoverflow.com/questions/7649155/avoid-geocode-limit-on-custom-google-map-with-multiple-markers?lq=1     
@@ -383,7 +390,6 @@ var ViewModel = function(){
             content: contentString,
             maxWidth: 280
         });
-        infoWindow.marker = marker;
         return infoWindow;    
     }
     
