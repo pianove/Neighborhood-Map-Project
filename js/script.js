@@ -4,17 +4,17 @@ var map,
 
 function initMap() {
     "use strict";
+    var chennai = {lat: 14.02982, lng: 79.94221},
     //Chennai generic latitude and longitude
-    var chennai = {lat: 13.2537, lng: 80.2707},
     mapOptions = {
-        zoom: 11,
+        zoom: 7,
         center: chennai,
         disableDefaultUI: true,
         mapTypeId: google.maps.MapTypeId.ROADMAP,
         mapTypeControl: true,
         mapTypeControlOptions: {
         style: google.maps.MapTypeControlStyle.HORIZONTAL_BAR,
-        position: google.maps.ControlPosition.LEFT_CENTER
+        position: google.maps.ControlPosition.LEFT_TOP
         },
         zoomControl: true,
         zoomControlOptions: {
@@ -273,6 +273,8 @@ var ViewModel = function(){
     //filters search result array and listview if input matches
     //hide and show markers accordingly
     this.selectedLocations = ko.computed(function(){
+        var bounds = new google.maps.LatLngBounds();
+
         return ko.utils.arrayFilter(self.initialLocationList(),
                     function (locItem, index){
                  var n = locItem.name().search(new RegExp(self.searchName(), "i")),
@@ -282,8 +284,19 @@ var ViewModel = function(){
             if (marker !== undefined) {
                 if (n != -1){
                     doesMatch = true;
+                bounds.extend(marker.position);
+                }
+                else {
+                    //keep map centered if no matches
+                    bounds.extend(new google.maps.LatLng(13.16269, 79.23085));
                 }
                 marker.setVisible(doesMatch);
+                // fit the map to the new marker
+                map.fitBounds(bounds);
+                //to keep zoom if no matches
+                map.setZoom(7);
+                // center the map
+                map.setCenter(bounds.getCenter());
             }
             return n != -1;
             });
@@ -356,6 +369,23 @@ var ViewModel = function(){
                             animateMarker(this);
                             infoWindowGlobal.open(map, this);
                             self.loadWikipedia(marker.title);
+                            /*var projection = map.getProjection();
+                            var markerPoint = projection.fromLatLngToPoint(this.position);
+                            var height = $('#map').height();
+//                            var currentBounds = map.getBounds();
+                            markerPoint.y = markerPoint.y - 550;
+                            var shiftedLatLng = projection.fromPointToLatLng(markerPoint);
+//                    currentBounds.extend(shiftedLatLng);
+                    map.fitBounds(new google.maps.LatLngBounds(
+  //bottom left
+//  new google.maps.LatLng(lat_min, lng_min),
+                        shiftedLatLng,
+  //top right
+//  new google.maps.LatLng(lat_max, lng_max)
+                        this.position
+));*/
+                            map.setZoom(11);
+//                            map.setCenter(shiftedLatLng);
                         }
                 });
 
