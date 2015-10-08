@@ -3,12 +3,12 @@
         height: 100%;
         margin: 10px;
       }
-      
+
       ul {
         padding-left: 0px;
         list-style: none;
       }
-        
+
       li.search-result {
         margin-top: 6px;
         list-style: none;
@@ -17,13 +17,13 @@
         overflow:auto;
         color: dimgrey;
       }
-    
+
       li.search-result:visited,
       li.search-result:hover,
       li.search-result:active {
         color: black;
       }
-        
+
       h4.sb_filter{
         list-style: none;
         padding-left: 10px;
@@ -36,7 +36,7 @@
         line-height:16px;
         padding:5px;
       }
-      
+
       .map {
         height: 100%;
         position: fixed !important;
@@ -46,7 +46,7 @@
         z-index:-1 !important;
         opacity:1;
       }
-        
+
       .search-container {
         background-color: rgba(255,255,255,0.7);
         position: relative;
@@ -62,19 +62,36 @@
         text-transform: capitalize;
         line-height: 20px;
       }
-    
+
       .search{
         display: block;
         }
-        
+
       form.search {
         margin-top: 10px;
       }
 
+      .list-view {
+        position: absolute;
+        top: 110px;
+        right: 10px;
+        overflow: auto;
+        background-color: rgba(255,255,255,0.7);
+        padding: 10px;
+        max-height: 220px;
+        width: 330px;
+        height: auto;
+      }
       .info-container {
         float: bottom;
       }
-    </style></head><body><div class="search-container"><div class><form id="ui_element" class="search" data-bind="submit: findLocation"><input class="sb_input" style="width: 275px" type="text" placeholder="Type here for search" data-bind="textInput: searchName"></form></div><div class="search-result"><h4 class="sb_filter">Search result(s)</h4><ul data-bind="foreach: selectedLocations"><li class="search-result" data-bind="text: name, click:$parent.setCurrentLocation"></li></ul></div><div id="map" class="map" alt="Google Map"></div><div id="no-map" alt="In lieu of Google Maps"></div><script>
+
+      .view-hidden {
+        transform: translate3d(+50em, 0, 0);
+        transition: transform 0.2s;
+      }
+
+    </style></head><body><div class="search-container"><div class><form id="ui_element" class="search" data-bind="submit: findLocation"><input class="sb_input" style="width: 275px" type="text" placeholder="Type here for search" data-bind="textInput: searchName"></form></div><h4 class="sb_filter">Search result(s)</h4></div><div class="list-view"><ul data-bind="foreach: selectedLocations"><li class="search-result" data-bind="text: name, click:$parent.setCurrentLocation"></li></ul></div><div id="map" class="map" alt="Google Map"></div><div id="no-map" alt="In lieu of Google Maps"></div><script>
         window.onload = function () {
           var foundGoogle, img;
           foundGoogle = typeof google === 'object' && typeof google.maps === 'object';
@@ -84,4 +101,4 @@
             $('#map').appendChild(img);
           }
         };
-    </script></div></body></html>
+    </script></body></html>
