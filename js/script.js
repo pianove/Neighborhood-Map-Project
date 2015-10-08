@@ -310,6 +310,15 @@ var ViewModel = function(){
     //slide listview when clicked result
     var listView = $('.sb_filter');
     listView.on('click', function() {
+        var el = $('h4.sb_filter'),
+        title = el.text().toLowerCase();
+        //alternate title show/hide
+        if (title === 'show listview'){
+            el.text('hide listview');
+        } else if (title === 'hide listview'){
+            el.text('show listview');
+        }
+
         $('.list-view').toggleClass('view-hidden');
     });
 
@@ -374,13 +383,14 @@ var ViewModel = function(){
                 onClick: function(){
                             var bounds = new google.maps.LatLngBounds();
                             bounds.extend(this.position);
-                            map.fitBounds(bounds);
                             infoWindowGlobal.close(map, marker);
                             infoWindowGlobal = addInfoWindow(this, location);
                             animateMarker(this);
+                            map.fitBounds(bounds);
+                            map.setZoom(10);
+                            map.setCenter(this.position);
                             infoWindowGlobal.open(map, this);
                             self.loadWikipedia(marker.title);
-                            map.setZoom(10);
                         }
                 });
 
