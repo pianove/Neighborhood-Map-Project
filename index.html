@@ -44,10 +44,15 @@
         color: black;
       }
 
+      .sb_input,
+      h4.sb_filter {
+        width: 275px;
+        margin-left: 15px;
+      }
+
       h4.sb_filter{
         list-style: none;
         padding-left: 10px;
-        width:250px;
         clear:both;
         font-size:12px;
         text-transform:uppercase;
@@ -55,6 +60,9 @@
         color:#444;
         line-height:16px;
         padding:5px;
+        margin-bottom: 0px;
+        background-color: gray;
+        color: white;
       }
 
       .map {
@@ -71,9 +79,9 @@
         background-color: rgba(255,255,255,0.7);
         position: relative;
         padding: 10px;
-        overflow: auto;
+/*        overflow: auto;*/
         max-height: 220px;
-        max-width: 330px;
+        width: 330px;
         float: right;
       }
 
@@ -117,12 +125,12 @@
     <div class="search-container">
             <div class="">
             <form id="ui_element" class="search" data-bind="submit: findLocation">
-                <input class="sb_input" style="width: 275px" type="text" placeholder="Type here for search" data-bind="textInput: searchName">
+                <input class="sb_input" type="text" placeholder="Type here for search" data-bind="textInput: searchName">
             </form>
         </div>
-         <h4 class="sb_filter">Search result(s)</h4>
+         <h4 class="sb_filter">Show listview</h4>
     </div>
-         <div  class="list-view">
+         <div  class="list-view view-hidden">
             <ul data-bind="foreach: selectedLocations">
                 <li class="search-result" data-bind="text: name, click:$parent.setCurrentLocation"></li>
             </ul>
