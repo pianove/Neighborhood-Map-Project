@@ -14,7 +14,7 @@ function initMap() {
         mapTypeControl: true,
         mapTypeControlOptions: {
         style: google.maps.MapTypeControlStyle.HORIZONTAL_BAR,
-        position: google.maps.ControlPosition.LEFT_TOP
+        position: google.maps.ControlPosition.LEFT_BOTTOM
         },
         zoomControl: true,
         zoomControlOptions: {
@@ -307,9 +307,10 @@ var ViewModel = function(){
     //select the first location on listview on submit
     this.findLocation = ko.observable(this.selectedLocations()[0]);
 
-     var hide = $('.sb_filter');
-        hide.on('click', function() {
-        $('.search-result').toggleClass('view-hidden');
+    //slide listview when clicked result
+    var listView = $('.sb_filter');
+    listView.on('click', function() {
+        $('.list-view').toggleClass('view-hidden');
     });
 
 
@@ -379,7 +380,7 @@ var ViewModel = function(){
                             animateMarker(this);
                             infoWindowGlobal.open(map, this);
                             self.loadWikipedia(marker.title);
-                            map.setZoom(11);
+                            map.setZoom(10);
                         }
                 });
 
