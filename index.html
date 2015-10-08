@@ -94,6 +94,12 @@
       .info-container {
         float: bottom;
       }
+
+      .view-hidden {
+        transform: translate3d(+50em, 0, 0);
+        transition: transform 0.2s;
+      }
+
     </style>
 </head>
 <body>
@@ -103,7 +109,9 @@
                 <input class="sb_input" style="width: 275px" type="text" placeholder="Type here for search" data-bind="textInput: searchName">
             </form>
         </div>
-        <div  class="search-result"> <h4 class="sb_filter">Search result(s)</h4>
+         <h4 class="sb_filter">Search result(s)</h4>
+    </div>
+         <div  class="search-container search-result">
             <ul data-bind="foreach: selectedLocations">
                 <li class="search-result" data-bind="text: name, click:$parent.setCurrentLocation"></li>
             </ul>

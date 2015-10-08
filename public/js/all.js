@@ -4,10 +4,10 @@ var map,
 
 function initMap() {
     "use strict";
-    var chennai = {lat: 14.02982, lng: 79.94221},
+    var chennai = {lat: 12.97508, lng: 80.32837},
     //Chennai generic latitude and longitude
     mapOptions = {
-        zoom: 7,
+        zoom: 10,
         center: chennai,
         disableDefaultUI: true,
         mapTypeId: google.maps.MapTypeId.ROADMAP,
@@ -188,11 +188,11 @@ var initialLocations = [
     },
 
     {
-    name: 'Mudumalai National Park',
-    street: '',
-    city: 'Theppakadu',
-    category: 'Must see',
-    description: "The protected area is home to several endangered and vulnerable species including Indian elephant, Bengal tiger, gaur and Indian leopard. There are at least 266 species of birds in the sanctuary, including critically endangered Indian white-rumped vulture and long-billed vulture. Elephant Safari and Van Safari, conducted by the Tamil Nadu Forest Department, depart from park headquarters at Theppakadu"
+    name: 'VK Advanced Yoga Teacher Venue',
+    street: '77, Greenways Rd Ext, Bishop Garden, Raja Annamalai Puram',
+    city: 'Chennai',
+    category: 'Yoga',
+    description: "This location will host the Vinyasa Krama 100h Advanced Yoga Teacher Program with Srivatsa Ramaswami."
     },
 
     {
@@ -273,7 +273,9 @@ var ViewModel = function(){
     //filters search result array and listview if input matches
     //hide and show markers accordingly
     this.selectedLocations = ko.computed(function(){
-        var bounds = new google.maps.LatLngBounds();
+    var bounds = new google.maps.LatLngBounds();
+    //close infowindow if any open
+    infoWindowGlobal.close(map);
 
         return ko.utils.arrayFilter(self.initialLocationList(),
                     function (locItem, index){
@@ -284,19 +286,18 @@ var ViewModel = function(){
             if (marker !== undefined) {
                 if (n != -1){
                     doesMatch = true;
-                bounds.extend(marker.position);
+                    bounds.extend(marker.position);
                 }
                 else {
                     //keep map centered if no matches
-                    bounds.extend(new google.maps.LatLng(13.16269, 79.23085));
+                    bounds.extend(new google.maps.LatLng(12.83871, 80.61545));
+                    bounds.extend(new google.maps.LatLng(13.26881, 79.92674));
                 }
                 marker.setVisible(doesMatch);
                 // fit the map to the new marker
                 map.fitBounds(bounds);
                 //to keep zoom if no matches
-                map.setZoom(7);
-                // center the map
-                map.setCenter(bounds.getCenter());
+                map.setZoom(10);
             }
             return n != -1;
             });
@@ -305,6 +306,12 @@ var ViewModel = function(){
 
     //select the first location on listview on submit
     this.findLocation = ko.observable(this.selectedLocations()[0]);
+
+     var hide = $('.sb_filter');
+        hide.on('click', function() {
+        $('.search-result').toggleClass('view-hidden');
+    });
+
 
     // to limit bouncing time for a few seconds
     //reference to http://stackoverflow.com/questions/14657779/google-maps-bounce-animation-on-marker-for-a-limited-period
@@ -364,28 +371,15 @@ var ViewModel = function(){
                 title: location.name(),
                 icon: icons[cat].icon,
                 onClick: function(){
+                            var bounds = new google.maps.LatLngBounds();
+                            bounds.extend(this.position);
+                            map.fitBounds(bounds);
                             infoWindowGlobal.close(map, marker);
                             infoWindowGlobal = addInfoWindow(this, location);
                             animateMarker(this);
                             infoWindowGlobal.open(map, this);
                             self.loadWikipedia(marker.title);
-                            /*var projection = map.getProjection();
-                            var markerPoint = projection.fromLatLngToPoint(this.position);
-                            var height = $('#map').height();
-//                            var currentBounds = map.getBounds();
-                            markerPoint.y = markerPoint.y - 550;
-                            var shiftedLatLng = projection.fromPointToLatLng(markerPoint);
-//                    currentBounds.extend(shiftedLatLng);
-                    map.fitBounds(new google.maps.LatLngBounds(
-  //bottom left
-//  new google.maps.LatLng(lat_min, lng_min),
-                        shiftedLatLng,
-  //top right
-//  new google.maps.LatLng(lat_max, lng_max)
-                        this.position
-));*/
                             map.setZoom(11);
-//                            map.setCenter(shiftedLatLng);
                         }
                 });
 
