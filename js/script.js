@@ -1,10 +1,11 @@
 //global variables to reach out in ViewModel once initMap() executed
 var map,
+    bounds,
     geocoder;
 
 function initMap() {
     "use strict";
-    var chennai = {lat: 12.97508, lng: 80.32837},
+    var chennai = {lat: 12.42773, lng: 80.77881},
     //Chennai generic latitude and longitude
     mapOptions = {
         zoom: 10,
@@ -28,6 +29,10 @@ function initMap() {
     };
     map = new google.maps.Map(document.getElementById("map"),
     mapOptions);
+    bounds = new google.maps.LatLngBounds();
+    bounds.extend(new google.maps.LatLng(12.81710, 80.46332));
+    bounds.extend(new google.maps.LatLng(13.65394, 80.00464));
+    map.fitBounds(bounds);
     geocoder = new google.maps.Geocoder();
 }
 
@@ -273,7 +278,6 @@ var ViewModel = function(){
     //filters search result array and listview if input matches
     //hide and show markers accordingly
     this.selectedLocations = ko.computed(function(){
-    var bounds = new google.maps.LatLngBounds();
     //close infowindow if any open
     infoWindowGlobal.close(map);
 
@@ -286,18 +290,9 @@ var ViewModel = function(){
             if (marker !== undefined) {
                 if (n != -1){
                     doesMatch = true;
-                    bounds.extend(marker.position);
                 }
-                else {
-                    //keep map centered if no matches
-                    bounds.extend(new google.maps.LatLng(12.83871, 80.61545));
-                    bounds.extend(new google.maps.LatLng(13.26881, 79.92674));
-                }
+
                 marker.setVisible(doesMatch);
-                // fit the map to the new marker
-                map.fitBounds(bounds);
-                //to keep zoom if no matches
-                map.setZoom(10);
             }
             return n != -1;
             });
@@ -308,10 +303,9 @@ var ViewModel = function(){
     this.findLocation = ko.observable(this.selectedLocations()[0]);
 
     //slide listview when clicked result
-    var listView = $('.sb_filter');
-    listView.on('click', function() {
-        var el = $('h4.sb_filter'),
-        title = el.text().toLowerCase();
+    var el = $('.sb_filter');
+    el.on('click', function() {
+        var title = el.text().toLowerCase();
         //alternate title show/hide
         if (title === 'show listview'){
             el.text('hide listview');
@@ -381,14 +375,9 @@ var ViewModel = function(){
                 title: location.name(),
                 icon: icons[cat].icon,
                 onClick: function(){
-                            var bounds = new google.maps.LatLngBounds();
-                            bounds.extend(this.position);
                             infoWindowGlobal.close(map, marker);
                             infoWindowGlobal = addInfoWindow(this, location);
                             animateMarker(this);
-                            map.fitBounds(bounds);
-                            map.setZoom(10);
-                            map.setCenter(this.position);
                             infoWindowGlobal.open(map, this);
                             self.loadWikipedia(marker.title);
                         }
@@ -417,7 +406,7 @@ var ViewModel = function(){
 
     // creates infoWindow to marker with locations name, category, description and wikilink content
     function addInfoWindow(marker, location) {
-        var  contentString = '<div class= "info-container"><div id="info-title">'+ '<b>' + location.name() + "</b></div>" + location.adress()  + '<p><b>' + "Category: " + location.category() + "</b></p>" +  '<p>' + location.description() + "</p>" + '<p><b>' + "Wikipedia Links: " + "</b><p><ul id='wikipedia-links'></ul>" + "</div>";
+        var  contentString = '<div class= "info-container"><div id="info-title">'+ '<b>' + location.name() + "</b></div>" + location.adress()  + '<p><b>' + "Category: " + location.category() + "</b></p>" +  '<p>' + location.description() + "</p>" + '<p><b>' + "Wikipedia Links: " + "</b><p><ul id='wikipedia-links' style='height: 40px;' ></ul>" + "</div>";
         var infoWindow = new google.maps.InfoWindow({
             content: contentString,
             maxWidth: 280
