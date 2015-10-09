@@ -30,8 +30,8 @@ function initMap() {
     map = new google.maps.Map(document.getElementById("map"),
     mapOptions);
     bounds = new google.maps.LatLngBounds();
-    bounds.extend(new google.maps.LatLng(12.81710, 80.46332));
-    bounds.extend(new google.maps.LatLng(13.65394, 80.00464));
+    bounds.extend(new google.maps.LatLng(12.81710, 80.00464));
+    bounds.extend(new google.maps.LatLng(13.65394, 80.46332));
     map.fitBounds(bounds);
     geocoder = new google.maps.Geocoder();
 }
