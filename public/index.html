@@ -12,7 +12,7 @@
       li.search-result {
         margin-top: 6px;
         list-style: none;
-        font-size: 18px;
+        font-size: 16px;
         margin-left: 5px;
         overflow:auto;
         color: dimgrey;
@@ -24,13 +24,12 @@
         color: black;
       }
 
-      .sb_input,
-      h4.sb_filter {
-        width: 275px;
-        margin-left: 15px;
+      .sb_input {
+        width: 145px;
+        margin-right: 5px;
       }
 
-      h4.sb_filter{
+      button.sb_filter{
         list-style: none;
         padding-left: 10px;
         clear:both;
@@ -58,10 +57,9 @@
       .search-container {
         background-color: rgba(255,255,255,0.7);
         position: relative;
-        padding: 10px;
-/*        overflow: auto;*/
-        max-height: 220px;
-        width: 330px;
+        padding: 5px;
+        max-height: 120px;
+        width: 300px;
         float: right;
       }
 
@@ -73,25 +71,18 @@
 
       .search{
         display: block;
-        }
-
-      form.search {
-        margin-top: 10px;
       }
 
       .list-view {
         position: absolute;
-        top: 110px;
+        top: 50px;
         right: 10px;
         overflow: auto;
         background-color: rgba(255,255,255,0.7);
         padding: 10px;
-        max-height: 220px;
-        width: 330px;
+        max-height: 120px;
+        width: 300px;
         height: auto;
-      }
-      .info-container {
-        float: bottom;
       }
 
       .view-hidden {
@@ -99,7 +90,13 @@
         transition: transform 0.2s;
       }
 
-    </style></head><body><div class="search-container"><div class><form id="ui_element" class="search" data-bind="submit: findLocation"><input class="sb_input" type="text" placeholder="Type here for search" data-bind="textInput: searchName"></form></div><h4 class="sb_filter">Show listview</h4></div><div class="list-view view-hidden"><ul data-bind="foreach: selectedLocations"><li class="search-result" data-bind="text: name, click:$parent.setCurrentLocation"></li></ul></div><div id="map" class="map" alt="Google Map"></div><div id="no-map" alt="In lieu of Google Maps"></div><script>
+      @media screen and (min-width: 600px) {
+        .list-view {
+            max-height: 80%;
+        }
+      }
+
+    </style></head><body><div class="search-container"><form id="ui_element" class="search" data-bind="submit: findLocation"><input class="sb_input" type="text" placeholder="Type here for search" data-bind="textInput: searchName"> <button class="sb_filter">Show listview</button></form></div><div class="list-view view-hidden"><ul data-bind="foreach: selectedLocations"><li class="search-result" data-bind="text: name, click:$parent.setCurrentLocation"></li></ul></div><div id="map" class="map" alt="Google Map"></div><div id="no-map" alt="In lieu of Google Maps"></div><script>
         window.onload = function () {
           var foundGoogle, img;
           foundGoogle = typeof google === 'object' && typeof google.maps === 'object';
