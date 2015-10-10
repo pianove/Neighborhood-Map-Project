@@ -359,16 +359,6 @@ var ViewModel = function(){
     //select the first location on listview on submit
     this.findLocation = ko.observable(this.selectedLocations()[0]);
 
-    //prevent filter button submit
-    $(".sb_input").keypress(function(e) {
-        if (e.keyCode == 13) {
-            e.preventDefault();
-            if ($('#legend').hasClass('legend-hidden')) {
-              self.searchCat = ko.observable('ALL');
-            }
-        }
-    });
-
     //slide legend when clicked show/hide filter button
     //clear category selection when legend hides
     var filter = $('.sb_filter');

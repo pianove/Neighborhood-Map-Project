@@ -128,13 +128,15 @@
         width: 88px;
       }
 
-      @media screen and (min-width: 600px) {
+      @media screen and (min-width: 790px) {
         .list-view {
             max-height: 58%;
         }
       }
 
-    </style></head><body><div class="search-container"><form id="ui_element" class="search" data-bind="submit: findLocation"><input class="sb_input" type="text" placeholder="Type here for search" data-bind="textInput: searchName"> <button class="sb_filter"><span class="glyphicon glyphicon-filter"></span></button> <button class="sb_view">Show list</button></form></div><div class="list-view view-hidden"><ul data-bind="foreach: selectedLocations"><li class="search-result" data-bind="text: name, click:$parent.setCurrentLocation"></li></ul></div><div id="map" class="map" alt="Google Map"></div><div id="no-map" alt="In lieu of Google Maps"></div><ul id="legend" class="legend btn-block" data-bind="foreach:category"><button type="button" class="btn btn-default btn-xs" data-bind="click:$parent.setCategory"><img data-bind="attr: {src: icon, alt: name}"><span data-bind="text: name"></span></button></ul><script>
+
+
+    </style></head><body><div class="search-container"><form id="ui_element" class="search" data-bind="submit: findLocation"><input class="sb_input" type="text" placeholder="Type here for search" data-bind="textInput: searchName"> <button style="display:none;"></button> <button class="sb_filter"><span class="glyphicon glyphicon-filter"></span></button> <button class="sb_view">Show list</button></form></div><div class="list-view view-hidden"><ul data-bind="foreach: selectedLocations"><li class="search-result" data-bind="text: name, click:$parent.setCurrentLocation"></li></ul></div><div id="map" class="map" alt="Google Map"></div><div id="no-map" alt="In lieu of Google Maps"></div><ul id="legend" class="legend btn-block" data-bind="foreach:category"><button type="button" class="btn btn-default btn-xs" data-bind="click:$parent.setCategory"><img data-bind="attr: {src: icon, alt: name}"><span data-bind="text: name"></span></button></ul><script>
         window.onload = function () {
           var foundGoogle, img;
           foundGoogle = typeof google === 'object' && typeof google.maps === 'object';

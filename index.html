@@ -148,18 +148,21 @@
         width: 88px;
       }
 
-      @media screen and (min-width: 600px) {
+      @media screen and (min-width: 790px) {
         .list-view {
             max-height: 58%;
         }
       }
 
+
+
     </style>
 </head>
 <body>
     <div class="search-container">
-        <form id="ui_element" class="search" data-bind="submit: findLocation" >
+        <form id="ui_element" class="search" data-bind="submit: findLocation">
             <input class="sb_input" type="text" placeholder="Type here for search" data-bind="textInput: searchName">
+            <button style="display:none;"></button>
             <button class="sb_filter"><span class="glyphicon glyphicon-filter"></span></button>
             <button class="sb_view">Show list</button>
         </form>
