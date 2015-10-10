@@ -22,6 +22,7 @@
       body {
         height: 100%;
         margin: 10px;
+        overflow: hidden;
       }
 
       ul {
@@ -40,8 +41,15 @@
 
       li.search-result:visited,
       li.search-result:hover,
-      li.search-result:active {
+      li.search-result:active,
+      {
         color: black;
+        text-decoration: none;
+      }
+
+      .legend button span{
+        color: dimgray;
+        margin-left: 3px;
       }
 
       .sb_input {
@@ -49,7 +57,8 @@
         margin-right: 5px;
       }
 
-      button.sb_filter{
+      button.sb_view,
+      button.sb_filter {
         list-style: none;
         padding-left: 10px;
         clear:both;
@@ -60,6 +69,7 @@
         line-height:16px;
         padding:5px;
         margin-bottom: 0px;
+        margin-left: 5px;
         background-color: gray;
         color: white;
       }
@@ -76,8 +86,10 @@
 
       .search-container {
         background-color: rgba(255,255,255,0.7);
-        position: relative;
+        position: absolute;
         padding: 5px;
+        top: 5px;
+        right: 10px;
         max-height: 120px;
         width: 300px;
         float: right;
@@ -95,7 +107,7 @@
 
       .list-view {
         position: absolute;
-        top: 50px;
+        top: 45px;
         right: 10px;
         overflow: auto;
         background-color: rgba(255,255,255,0.7);
@@ -103,16 +115,42 @@
         max-height: 120px;
         width: 300px;
         height: auto;
+        transform: translate3d(0, 0, 0);
+        -webkit-transform: translate3d( 0, 0, 0 );
+      }
+
+      .legend {
+        background: white;
+        padding: 10px;
+        right: 40px;
+        bottom: 14px;
+        width: 210px;
+        text-align: justify;
+        position: absolute;
+        transform: translate3d(0, 0, 0);
+        -webkit-transform: translate3d( 0, 0, 0 );
       }
 
       .view-hidden {
-        transform: translate3d(+50em, 0, 0);
-        transition: transform 0.2s;
+        transform: translate3d(+350px, 0, 0);
+        -webkit-transform: translate3d(+350px, 0, 0);
+        transition: transform 0.25s;
+      }
+
+      .legend-hidden {
+        transform: translate3d(0, +350px, 0);
+        -webkit-transform: translate3d(0, +350px, 0);
+        transition: transform 0.35s;
+      }
+
+      .legend .btn {
+        margin: 3px 0px 3px 0px;
+        width: 88px;
       }
 
       @media screen and (min-width: 600px) {
         .list-view {
-            max-height: 80%;
+            max-height: 58%;
         }
       }
 
@@ -120,9 +158,10 @@
 </head>
 <body>
     <div class="search-container">
-        <form id="ui_element" class="search" data-bind="submit: findLocation">
+        <form id="ui_element" class="search" data-bind="submit: findLocation" >
             <input class="sb_input" type="text" placeholder="Type here for search" data-bind="textInput: searchName">
-            <button class="sb_filter">Show listview</button>
+            <button class="sb_filter"><span class="glyphicon glyphicon-filter"></span></button>
+            <button class="sb_view">Show list</button>
         </form>
     </div>
     <div  class="list-view view-hidden">
@@ -132,6 +171,10 @@
     </div>
     <div id="map" class="map"  alt="Google Map"></div>
     <div id="no-map" alt="In lieu of Google Maps"></div>
+    <ul id="legend" class='legend btn-block' data-bind="foreach:category">
+        <button type="button" class="btn btn-default btn-xs" data-bind= 'click:$parent.setCategory' ><img data-bind='attr: {src: icon, alt: name}'><span data-bind='text: name'></span>
+        </button>
+    </ul>
     <script>
         window.onload = function () {
           var foundGoogle, img;
