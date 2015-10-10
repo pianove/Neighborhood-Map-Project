@@ -39,6 +39,39 @@ function initMap() {
 
 //=======Model=============
 // to hard code locations -Places to visit during my trip to Chennai in November 2015 as a FEND graduation present LOL
+var categories = ['all', 'yoga', 'food', 'mustsee', 'beach','shopping', 'hotel'];
+
+var icons = {
+    all: {
+        name: 'ALL',
+        icon: 'public/img/all.png'
+    },
+    yoga: {
+        name: 'Yoga',
+        icon: 'public/img/yoga.png'
+    },
+    hotel: {
+        name: 'Hotel',
+        icon: 'public/img/hotel.png'
+    },
+    mustsee: {
+        name: 'Must see',
+        icon: 'public/img/must_see.png'
+    },
+    shopping: {
+        name: 'Shopping',
+        icon: 'public/img/shopping.png'
+    },
+    beach: {
+        name: 'Beach',
+        icon: 'public/img/beach.png'
+    },
+    food: {
+        name: 'Food',
+        icon: 'public/img/restaurant.png'
+    }
+};
+
 var initialLocations = [
     {
     name: "Yoga Vahini",
@@ -60,7 +93,7 @@ var initialLocations = [
     name: "YWCA International Guest House",
     street: "1086 Poonamallee High Road",
     city: 'Chennai',
-    category: 'Accomodation',
+    category: 'Hotel',
     description: "The YWCA guesthouse, set in shady grounds, offers very good value along with a calm atmosphere. Efficiently run by helpful staff, it has good-sized, brilliantly clean rooms, spacious common areas and solid-value meals."
     },
 
@@ -156,7 +189,7 @@ var initialLocations = [
     name: 'Nandanam Restaurant',
     street: 'E 28, 1st Floor, 2nd Avenue, GOCHS Colony, Besant Nagar',
     city: 'Chennai',
-    category: 'Restaurant',
+    category: 'Food',
     description: "A really good Kerala restaurant in the area. Syrian Beef Fry is a must try item, it totally steals the show. I mostly go there for lunches, which are good - fish curry meals. You get most Kerala varieties like appam, idiyappam, etc."
     },
 
@@ -188,7 +221,7 @@ var initialLocations = [
     name: 'Kitchen e Lazeez',
     street: '68/1, Q Block,Ground Floor, 15th Street | Annanagar East',
     city: 'Chennai',
-    category: 'Restaurant',
+    category: 'Food',
     description: "If u want to learn cooking it's one of the best places to visit. Do check their Facebook page (facebook.com/kitchenelazeez) events section and plan accordingly. Classes on Saturdays and Mondays only."
     },
 
@@ -223,6 +256,7 @@ var Location = function(data) {
     this.description = ko.observable(data.description);
 };
 
+
 //======ViewModel=======================
 // makes the locations/markers/wikilinks show up in a list
 // with a reali time search/filter function
@@ -231,7 +265,7 @@ var ViewModel = function(){
     var self = this;
     var geocodeTimeOutId,
         infoWindowGlobal = new google.maps.InfoWindow({
-            maxWidth: 280
+            maxWidth: 260
         }),
         i = 0;
 
@@ -275,26 +309,49 @@ var ViewModel = function(){
     //input value to search and filter
     this.searchName = ko.observable("");
 
+    //set initial value ALL to category filter
+    this.searchCat = ko.observable("ALL");
+
+    //set clicked category to filter
+    this.setCategory = function(clickedCategory) {
+        self.searchCat(clickedCategory.name);
+    };
+
+    //create legend on view
+    this.category = ko.observableArray([]);
+    for (var c = 0; c < categories.length; c++){
+        self.category.push(icons[categories[c]]);
+    }
+
     //filters search result array and listview if input matches
     //hide and show markers accordingly
     this.selectedLocations = ko.computed(function(){
-    //close infowindow if any open
-    infoWindowGlobal.close(map);
-
+        //close infowindow if any open
+        infoWindowGlobal.close(map);
+        //clear filter if legend hides
+        if ($('#legend').hasClass('legend-hidden')) {
+            self.searchCat = ko.observable('ALL');
+        }
         return ko.utils.arrayFilter(self.initialLocationList(),
-                    function (locItem, index){
+                    function (locItem){
                  var n = locItem.name().search(new RegExp(self.searchName(), "i")),
                      doesMatch = false;
                     var i = self.getMarkerByName(locItem.name());
                     var marker = self.markersArray()[i];
-            if (marker !== undefined) {
-                if (n != -1){
-                    doesMatch = true;
-                }
 
+            if (marker !== undefined) {
+                if (n != -1)   {
+                    doesMatch = true;
+                    if (self.searchCat() !== "ALL") {
+                        if (locItem.category() !== self.searchCat()) {
+                            doesMatch = false;
+                            n = -1;
+                        }
+                    }
+                }
                 marker.setVisible(doesMatch);
             }
-            return n != -1;
+            return n != -1 ;
             });
     });
 
@@ -302,20 +359,22 @@ var ViewModel = function(){
     //select the first location on listview on submit
     this.findLocation = ko.observable(this.selectedLocations()[0]);
 
-    //slide listview when clicked result
-    var el = $('.sb_filter');
-    el.on('click', function() {
-        var title = el.text().toLowerCase();
-        //alternate title show/hide
-        if (title === 'show listview'){
-            el.text('hide listview');
-        } else if (title === 'hide listview'){
-            el.text('show listview');
+    //prevent filter button submit
+    $(".sb_input").keypress(function(e) {
+        if (e.keyCode == 13) {
+            e.preventDefault();
+            if ($('#legend').hasClass('legend-hidden')) {
+              self.searchCat = ko.observable('ALL');
+            }
         }
-
-        $('.list-view').toggleClass('view-hidden');
     });
 
+    //slide legend when clicked show/hide filter button
+    //clear category selection when legend hides
+    var filter = $('.sb_filter');
+    filter.on('click', function(e) {
+        $('#legend').toggleClass('legend-hidden');
+    });
 
     // to limit bouncing time for a few seconds
     //reference to http://stackoverflow.com/questions/14657779/google-maps-bounce-animation-on-marker-for-a-limited-period
@@ -342,26 +401,6 @@ var ViewModel = function(){
         var marker;
         //set icons per category
         //credit to https://developers.google.com/maps/tutorials/customizing/custom-markers
-        var icons = {
-              yoga: {
-                icon: 'public/img/yoga.png'
-              },
-              accomodation: {
-                icon: 'public/img/hotel.png'
-              },
-              mustsee: {
-                icon: 'public/img/must_see.png'
-              },
-              shopping: {
-                icon: 'public/img/shopping.png'
-              },
-              beach: {
-                icon: 'public/img/beach.png'
-              },
-              restaurant: {
-                icon: 'public/img/restaurant.png'
-              }
-        };
 
         geocoder.geocode({'address': location.adress()}, function(results, status) {
             if (status === google.maps.GeocoderStatus.OK) {
@@ -386,7 +425,7 @@ var ViewModel = function(){
                 marker.setVisible(false);
                 //cache markers for quick hide and show
                 self.markersArray.push(marker);
-//                http://toddmotto.com/everything-you-wanted-to-know-about-javascript-scope/
+                //http://toddmotto.com/everything-you-wanted-to-know-about-javascript-scope/
                 google.maps.event.addListener(marker, 'click', function(){
                     this.onClick();
                    }, false);
@@ -452,8 +491,21 @@ var ViewModel = function(){
         });
         return false;
     };
-};
 
+    //slide listview when clicked show/hide list button
+    var el = $('button.sb_view');
+    el.on('click', function() {
+        var title = el.text().toLowerCase();
+        //alternate title show/hide
+        if (title === 'show list'){
+            el.text('hide list');
+        } else if (title === 'hide list'){
+            el.text('show list');
+        }
+
+        $('.list-view').toggleClass('view-hidden');
+    });
+};
 
 //make it run once google.maps fired up initMap()
 //ref http://stackoverflow.com/questions/20718183/adding-google-maps-with-knockoutjs?rq=1
