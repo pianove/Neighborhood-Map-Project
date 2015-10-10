@@ -112,7 +112,7 @@
         overflow: auto;
         background-color: rgba(255,255,255,0.7);
         padding: 10px;
-        max-height: 120px;
+        max-height: 25%;
         width: 300px;
         height: auto;
         transform: translate3d(0, 0, 0);
@@ -148,7 +148,7 @@
         width: 88px;
       }
 
-      @media screen and (min-width: 790px) {
+      @media screen and (min-width: 790px) and (min-height: 400px) {
         .list-view {
             max-height: 58%;
         }
@@ -163,8 +163,8 @@
         <form id="ui_element" class="search" data-bind="submit: findLocation">
             <input class="sb_input" type="text" placeholder="Type here for search" data-bind="textInput: searchName">
             <button style="display:none;"></button>
-            <button class="sb_filter"><span class="glyphicon glyphicon-filter"></span></button>
-            <button class="sb_view">Show list</button>
+            <button type="button" class="sb_filter"><span class="glyphicon glyphicon-filter"></span></button>
+            <button type="button" class="sb_view">Show list</button>
         </form>
     </div>
     <div  class="list-view view-hidden">
@@ -179,6 +179,7 @@
         </button>
     </ul>
     <script>
+
         window.onload = function () {
           var foundGoogle, img;
           foundGoogle = typeof google === 'object' && typeof google.maps === 'object';
