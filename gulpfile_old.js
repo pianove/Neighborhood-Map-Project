@@ -1,17 +1,17 @@
 // Include gulp
-var gulp = require('gulp');
+var gulp = require('gulp'); 
 
 // Include Plugins
 var jshint = require('gulp-jshint'),
-    sass = require('gulp-sass'),
-    concat = require('gulp-concat'),
+//var sass = require('gulp-sass');
+    concatify = require('gulp-concat'),
     uglify = require('gulp-uglify'),
     rename = require('gulp-rename'),
     cssmin = require('gulp-minify-css'),
     imgmin = require('imagemin-jpeg-recompress'),
     gutil = require('gulp-util'),
     connect = require('gulp-connect'),
-//    sass = require('gulp-ruby-sass'),
+    sass = require('gulp-ruby-sass'),
     webserver = require('gulp-webserver'),
     sourcemaps = require('gulp-sourcemaps'),
 //    imagemin = require('gulp-imagemin'),
@@ -21,11 +21,10 @@ var jshint = require('gulp-jshint'),
 //Paths to various files
 var paths = {
     scripts: ['js/*.js','bower_components/jquery/dist/jquery.js'],
-    stylesSass: ['scss/style.scss','scss/styles/*.scss'],
-    styles: ['css', 'styles/*.css'],
+    styles: ['scss/style.scss','scss/styles/*.scss'],
     images: ['img/**/*'],
     content: ['index.html']
-};
+}
 
 // Lint Task
 gulp.task('lint', function() {
@@ -36,11 +35,10 @@ gulp.task('lint', function() {
 
 // Compile Our Sass
 gulp.task('sass', function() {
-    return gulp.src(paths.stylesSass)
+    return gulp.src('scss/*.scss')
         .pipe(sass())
-        .pipe(gulp.dest('public/scss'));
+        .pipe(gulp.dest('css'));
 });
-
 
 // Concatenate & Minify JS
 gulp.task('scripts', function() {
@@ -52,43 +50,20 @@ gulp.task('scripts', function() {
         .pipe(gulp.dest('public/js'));
 });
 
-
 // Concatenate & Minify CSS
 gulp.task('cssmin', function() {
-    return gulp.src(paths.styles)
+    return gulp.src('css/*.css')
         .pipe(cssmin())
         .pipe(concat('all.css'))
         .pipe(rename('all.min.css'))
         .pipe(gulp.dest('public/css'));
 });
 
-// Optimize jpg
+// Optimize jpg 
 gulp.task('imgmin', function () {
-    return gulp.src(paths.images)
+    return gulp.src('images/*.jpg')
         .pipe(imgmin({loops: 3})())
-        .pipe(gulp.dest('public/img/'));
-});
-
-//Minify html
-gulp.task('content', function() {
-    return gulp.src(paths.content)
-        .pipe(minifyhtml({
-            empty: true,
-            quotes: true
-        }))
-        .pipe(gulp.dest('public'));
-});
-
-
-
-// Watch Files For Changes
-gulp.task('watch', function() {
-    gulp.watch(paths.scripts, ['lint']);
-    gulp.watch(paths.scripts, ['scripts']);
-    gulp.watch(paths.stylesSass, ['sass']);
-    gulp.watch(paths.styles, ['cssmin']);
-    gulp.watch(paths.content, ['content']);
-    gulp.watch(paths.images, ['imgmin']);
+        .pipe(gulp.dest('public/images'));
 });
 
 //Connect to local server
@@ -99,5 +74,15 @@ gulp.task('webserver', function() {
 });
 
 
+// Watch Files For Changes
+gulp.task('watch', function() {
+    gulp.watch('js/*.js', ['lint']);
+    gulp.watch('js/*.js', ['scripts']);
+    gulp.watch('*.scss', ['sass']);
+    gulp.watch('css/*.css', ['cssmin']);
+    gulp.watch('images/*.jpg', ['imgmin'])
+});
+
+
 // Default Task
-gulp.task('default', ['lint', 'sass', 'scripts','cssmin','imgmin', 'content', 'webserver', 'watch']);
+gulp.task('default', ['lint', 'sass', 'scripts','cssmin','imgmin', 'webserver', 'watch']);

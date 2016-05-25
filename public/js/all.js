@@ -10,7 +10,7 @@ function initMap() {
         },
         //Chennai generic latitude and longitude
         mapOptions = {
-            zoom: 12,
+            zoom: 11,
             center: chennai,
             disableDefaultUI: true,
             mapTypeId: google.maps.MapTypeId.ROADMAP,
